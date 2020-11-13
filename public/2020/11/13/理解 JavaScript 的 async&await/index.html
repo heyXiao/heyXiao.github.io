@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="一篇来自2018年4月17日的Git笔记, heyXiao">
+    <meta name="keywords" content="理解 JavaScript 的 async/await, heyXiao">
     <meta name="description" content="他在这里想做什么就做什么">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>一篇来自2018年4月17日的Git笔记 | heyXiao</title>
+    <title>理解 JavaScript 的 async/await | heyXiao</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -277,12 +277,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">一篇来自2018年4月17日的Git笔记</h1>
+                    <h1 class="description center-align post-title">理解 JavaScript 的 async/await</h1>
                 </div>
             </div>
         </div>
@@ -399,8 +399,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Git/">
-                                <span class="chip bg-color">Git</span>
+                            <a href="/tags/JavaScript/">
+                                <span class="chip bg-color">JavaScript</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                <span class="chip bg-color">转载</span>
                             </a>
                         
                     </div>
@@ -411,8 +415,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Git/" class="post-category">
-                                Git
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                技术
                             </a>
                         
                     </div>
@@ -424,21 +428,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-11-09
+                    2020-11-13
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-11-09
+                    2020-11-13
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.4k
+                    2.7k
                 </div>
                 
 
@@ -450,241 +454,215 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="GIT"><a href="#GIT" class="headerlink" title="GIT"></a>GIT</h2><h3 id="命令行窗口"><a href="#命令行窗口" class="headerlink" title="命令行窗口"></a>命令行窗口</h3><ul>
-<li>我们平时使用计算机都是通过可视化的界面来对电脑发送命令<ul>
-<li>鼠标右键-&gt;新建-&gt;新建文件夹</li>
+                <h1 id="理解-JavaScript-的-async-await"><a href="#理解-JavaScript-的-async-await" class="headerlink" title="理解 JavaScript 的 async/await"></a><a href="">理解 JavaScript 的 async/await</a></h1><p>JavaScript 中的 async/await 是 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction">AsyncFunction 特性</a> 中的关键字。目前为止，除了 IE 之外，常用浏览器和 Node (v7.6+) 都已经支持该特性。具体支持情况可以在 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction#Browser_compatibility">这里</a> 查看。</p>
+<hr>
+<p>我第一次看到 async/await 这组关键字并不是在 JavaScript 语言里，而是在 C# 5.0 的语法中。C# 的 async/await 需要在 .NET Framework 4.5 以上的版本中使用，因此我还很悲伤了一阵——为了要兼容 XP 系统，我们开发的软件不能使用高于 4.0 版本的 .NET Framework。</p>
+<p>我之前在<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000003742890">《闲谈异步调用“扁平”化》</a> 中就谈到了这个问题。无论是在 C# 还是 JavaScript 中，async/await 都是非常棒的特性，它们也都是非常甜的语法糖。C# 的 async/await 实现离不开 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/library/dd321424.aspx">Task 或 Task<Result></a> 类，而 JavaScript 的 async/await 实现，也离不开 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>。</p>
+<p>现在抛开 C# 和 .NET Framework，专心研究下 JavaScript 的 async/await。</p>
+<h2 id="1-async-和-await-在干什么"><a href="#1-async-和-await-在干什么" class="headerlink" title="1. async 和 await 在干什么"></a>1. async 和 await 在干什么</h2><p>任意一个名称都是有意义的，先从字面意思来理解。async 是“异步”的简写，而 await 可以认为是 async wait 的简写。所以应该很好理解 async 用于申明一个 function 是异步的，而 await 用于等待一个异步方法执行完成。</p>
+<p>另外还有一个很有意思的语法规定，await 只能出现在 async 函数中。然后细心的朋友会产生一个疑问，如果 await 只能出现在 async 函数中，那这个 async 函数应该怎么调用？</p>
+<p>如果需要通过 await 来调用一个 async 函数，那这个调用的外面必须得再包一个 async 函数，然后……进入死循环，永无出头之日……</p>
+<p>如果 async 函数不需要 await 来调用，那 async 到底起个啥作用？</p>
+<h3 id="1-1-async-起什么作用"><a href="#1-1-async-起什么作用" class="headerlink" title="1.1. async 起什么作用"></a>1.1. async 起什么作用</h3><p>这个问题的关键在于，async 函数是怎么处理它的返回值的！</p>
+<p>我们当然希望它能直接通过 <code>return</code> 语句返回我们想要的值，但是如果真是这样，似乎就没 await 什么事了。所以，写段代码来试试，看它到底会返回什么：</p>
+<pre><code>async function testAsync() &#123;
+    return &quot;hello async&quot;;
+&#125;
+
+const result = testAsync();
+console.log(result);</code></pre>
+<p>看到输出就恍然大悟了——输出的是一个 Promise 对象。</p>
+<pre><code>c:\var\test&gt; node --harmony_async_await .
+Promise &#123; &#39;hello async&#39; &#125;</code></pre>
+<p>所以，async 函数返回的是一个 Promise 对象。从<a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function">文档</a>中也可以得到这个信息。async 函数（包含函数语句、函数表达式、Lambda 表达式）会返回一个 Promise 对象，如果在函数中 <code>return</code> 一个直接量，async 会把这个直接量通过 <code>Promise.resolve()</code> 封装成 Promise 对象。</p>
+<blockquote>
+<p>补充知识点 <em>[2020-06-04]</em></p>
+<p><code>Promise.resolve(x)</code> 可以看作是 <code>new Promise(resolve =&gt; resolve(x))</code> 的简写，可以用于快速封装字面量对象或其他对象，将其封装成 Promise 实例。</p>
+</blockquote>
+<p>async 函数返回的是一个 Promise 对象，所以在最外层不能用 await 获取其返回值的情况下，我们当然应该用原来的方式：<code>then()</code> 链来处理这个 Promise 对象，就像这样</p>
+<pre><code>testAsync().then(v =&gt; &#123;
+    console.log(v);    // 输出 hello async
+&#125;);</code></pre>
+<p>现在回过头来想下，如果 async 函数没有返回值，又该如何？很容易想到，它会返回 <code>Promise.resolve(undefined)</code>。</p>
+<p>联想一下 Promise 的特点——无等待，所以在没有 <code>await</code> 的情况下执行 async 函数，它会立即执行，返回一个 Promise 对象，并且，绝不会阻塞后面的语句。这和普通返回 Promise 对象的函数并无二致。</p>
+<p>那么下一个关键点就在于 await 关键字了。</p>
+<h3 id="1-2-await-到底在等啥"><a href="#1-2-await-到底在等啥" class="headerlink" title="1.2. await 到底在等啥"></a>1.2. await 到底在等啥</h3><p>一般来说，都认为 await 是在等待一个 async 函数完成。不过按<a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/await">语法说明</a>，await 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值（换句话说，就是没有特殊限定）。</p>
+<p>因为 async 函数返回一个 Promise 对象，所以 await 可以用于等待一个 async 函数的返回值——这也可以说是 await 在等 async 函数，但要清楚，它等的实际是一个返回值。注意到 await 不仅仅用于等 Promise 对象，它可以等任意表达式的结果，所以，await 后面实际是可以接普通函数调用或者直接量的。所以下面这个示例完全可以正确运行</p>
+<pre><code>function getSomething() &#123;
+    return &quot;something&quot;;
+&#125;
+
+async function testAsync() &#123;
+    return Promise.resolve(&quot;hello async&quot;);
+&#125;
+
+async function test() &#123;
+    const v1 = await getSomething();
+    const v2 = await testAsync();
+    console.log(v1, v2);
+&#125;
+
+test();</code></pre>
+<h3 id="1-3-await-等到了要等的，然后呢"><a href="#1-3-await-等到了要等的，然后呢" class="headerlink" title="1.3. await 等到了要等的，然后呢"></a>1.3. await 等到了要等的，然后呢</h3><p>await 等到了它要等的东西，一个 Promise 对象，或者其它值，然后呢？我不得不先说，<code>await</code> 是个运算符，用于组成表达式，await 表达式的运算结果取决于它等的东西。</p>
+<p>如果它等到的不是一个 Promise 对象，那 await 表达式的运算结果就是它等到的东西。</p>
+<p>如果它等到的是一个 Promise 对象，await 就忙起来了，它会阻塞后面的代码，等着 Promise 对象 resolve，然后得到 resolve 的值，作为 await 表达式的运算结果。</p>
+<blockquote>
+<p>看到上面的阻塞一词，心慌了吧……放心，这就是 await 必须用在 async 函数中的原因。async 函数调用不会造成阻塞，它内部所有的阻塞都被封装在一个 Promise 对象中异步执行。</p>
+</blockquote>
+<h2 id="2-async-await-帮我们干了啥"><a href="#2-async-await-帮我们干了啥" class="headerlink" title="2. async/await 帮我们干了啥"></a>2. async/await 帮我们干了啥</h2><h3 id="2-1-作个简单的比较"><a href="#2-1-作个简单的比较" class="headerlink" title="2.1. 作个简单的比较"></a>2.1. 作个简单的比较</h3><p>上面已经说明了 async 会将其后的函数（函数表达式或 Lambda）的返回值封装成一个 Promise 对象，而 await 会等待这个 Promise 完成，并将其 resolve 的结果返回出来。</p>
+<p>现在举例，用 <code>setTimeout</code> 模拟耗时的异步操作，先来看看不用 async/await 会怎么写</p>
+<pre><code>function takeLongTime() &#123;
+    return new Promise(resolve =&gt; &#123;
+        setTimeout(() =&gt; resolve(&quot;long_time_value&quot;), 1000);
+    &#125;);
+&#125;
+
+takeLongTime().then(v =&gt; &#123;
+    console.log(&quot;got&quot;, v);
+&#125;);</code></pre>
+<p>如果改用 async/await 呢，会是这样</p>
+<pre><code>function takeLongTime() &#123;
+    return new Promise(resolve =&gt; &#123;
+        setTimeout(() =&gt; resolve(&quot;long_time_value&quot;), 1000);
+    &#125;);
+&#125;
+
+async function test() &#123;
+    const v = await takeLongTime();
+    console.log(v);
+&#125;
+
+test();</code></pre>
+<p>眼尖的同学已经发现 <code>takeLongTime()</code> 没有申明为 <code>async</code>。实际上，<code>takeLongTime()</code> 本身就是返回的 Promise 对象，加不加 <code>async</code> 结果都一样，如果没明白，请回过头再去看看上面的“async 起什么作用”。</p>
+<p>又一个疑问产生了，这两段代码，两种方式对异步调用的处理（实际就是对 Promise 对象的处理）差别并不明显，甚至使用 async/await 还需要多写一些代码，那它的优势到底在哪？</p>
+<h3 id="2-2-async-await-的优势在于处理-then-链"><a href="#2-2-async-await-的优势在于处理-then-链" class="headerlink" title="2.2. async/await 的优势在于处理 then 链"></a>2.2. async/await 的优势在于处理 then 链</h3><p>单一的 Promise 链并不能发现 async/await 的优势，但是，如果需要处理由多个 Promise 组成的 then 链的时候，优势就能体现出来了（很有意思，Promise 通过 then 链来解决多层回调的问题，现在又用 async/await 来进一步优化它）。</p>
+<p>假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。我们仍然用 <code>setTimeout</code> 来模拟异步操作：</p>
+<pre><code>/**
+ * 传入参数 n，表示这个函数执行的时间（毫秒）
+ * 执行的结果是 n + 200，这个值将用于下一步骤
+ */
+function takeLongTime(n) &#123;
+    return new Promise(resolve =&gt; &#123;
+        setTimeout(() =&gt; resolve(n + 200), n);
+    &#125;);
+&#125;
+
+function step1(n) &#123;
+    console.log(`step1 with $&#123;n&#125;`);
+    return takeLongTime(n);
+&#125;
+
+function step2(n) &#123;
+    console.log(`step2 with $&#123;n&#125;`);
+    return takeLongTime(n);
+&#125;
+
+function step3(n) &#123;
+    console.log(`step3 with $&#123;n&#125;`);
+    return takeLongTime(n);
+&#125;</code></pre>
+<p>现在用 Promise 方式来实现这三个步骤的处理</p>
+<pre><code>function doIt() &#123;
+    console.time(&quot;doIt&quot;);
+    const time1 = 300;
+    step1(time1)
+        .then(time2 =&gt; step2(time2))
+        .then(time3 =&gt; step3(time3))
+        .then(result =&gt; &#123;
+            console.log(`result is $&#123;result&#125;`);
+            console.timeEnd(&quot;doIt&quot;);
+        &#125;);
+&#125;
+
+doIt();
+
+// c:\var\test&gt;node --harmony_async_await .
+// step1 with 300
+// step2 with 500
+// step3 with 700
+// result is 900
+// doIt: 1507.251ms</code></pre>
+<p>输出结果 <code>result</code> 是 <code>step3()</code> 的参数 <code>700 + 200</code> = <code>900</code>。<code>doIt()</code> 顺序执行了三个步骤，一共用了 <code>300 + 500 + 700 = 1500</code> 毫秒，和 <code>console.time()/console.timeEnd()</code> 计算的结果一致。</p>
+<p>如果用 async/await 来实现呢，会是这样</p>
+<pre><code>async function doIt() &#123;
+    console.time(&quot;doIt&quot;);
+    const time1 = 300;
+    const time2 = await step1(time1);
+    const time3 = await step2(time2);
+    const result = await step3(time3);
+    console.log(`result is $&#123;result&#125;`);
+    console.timeEnd(&quot;doIt&quot;);
+&#125;
+
+doIt();</code></pre>
+<p>结果和之前的 Promise 实现是一样的，但是这个代码看起来是不是清晰得多，几乎跟同步代码一样</p>
+<h3 id="2-3-还有更酷的"><a href="#2-3-还有更酷的" class="headerlink" title="2.3. 还有更酷的"></a>2.3. 还有更酷的</h3><p>现在把业务要求改一下，仍然是三个步骤，但每一个步骤都需要之前每个步骤的结果。</p>
+<pre><code>function step1(n) &#123;
+    console.log(`step1 with $&#123;n&#125;`);
+    return takeLongTime(n);
+&#125;
+
+function step2(m, n) &#123;
+    console.log(`step2 with $&#123;m&#125; and $&#123;n&#125;`);
+    return takeLongTime(m + n);
+&#125;
+
+function step3(k, m, n) &#123;
+    console.log(`step3 with $&#123;k&#125;, $&#123;m&#125; and $&#123;n&#125;`);
+    return takeLongTime(k + m + n);
+&#125;</code></pre>
+<p>这回先用 async/await 来写：</p>
+<pre><code>async function doIt() &#123;
+    console.time(&quot;doIt&quot;);
+    const time1 = 300;
+    const time2 = await step1(time1);
+    const time3 = await step2(time1, time2);
+    const result = await step3(time1, time2, time3);
+    console.log(`result is $&#123;result&#125;`);
+    console.timeEnd(&quot;doIt&quot;);
+&#125;
+
+doIt();
+
+// c:\var\test&gt;node --harmony_async_await .
+// step1 with 300
+// step2 with 800 = 300 + 500
+// step3 with 1800 = 300 + 500 + 1000
+// result is 2000
+// doIt: 2907.387ms</code></pre>
+<p>除了觉得执行时间变长了之外，似乎和之前的示例没啥区别啊！别急，认真想想如果把它写成 Promise 方式实现会是什么样子？</p>
+<pre><code>function doIt() &#123;
+    console.time(&quot;doIt&quot;);
+    const time1 = 300;
+    step1(time1)
+        .then(time2 =&gt; &#123;
+            return step2(time1, time2)
+                .then(time3 =&gt; [time1, time2, time3]);
+        &#125;)
+        .then(times =&gt; &#123;
+            const [time1, time2, time3] = times;
+            return step3(time1, time2, time3);
+        &#125;)
+        .then(result =&gt; &#123;
+            console.log(`result is $&#123;result&#125;`);
+            console.timeEnd(&quot;doIt&quot;);
+        &#125;);
+&#125;
+
+doIt();</code></pre>
+<p>有没有感觉有点复杂的样子？那一堆参数处理，就是 Promise 方案的死穴—— 参数传递太麻烦了，看着就晕！</p>
+<h2 id="3-洗洗睡吧"><a href="#3-洗洗睡吧" class="headerlink" title="3. 洗洗睡吧"></a>3. 洗洗睡吧</h2><p>就目前来说，已经理解 async/await 了吧？但其实还有一些事情没提及——Promise 有可能 reject 啊，怎么处理呢？如果需要并行处理3个步骤，再等待所有结果，又该怎么处理呢？</p>
+<p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/05/async.html">阮一峰老师已经说过了</a>，我就懒得说了。</p>
+<h2 id="4-推荐相关文章"><a href="#4-推荐相关文章" class="headerlink" title="4. 推荐相关文章"></a>4. 推荐相关文章</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021966277">在微信小程序中使用 async/await</a> 2020-03-10</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022349639">代码审查，异步调用的常见问题剖析</a> 2020-04-12</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022315137">Proxy 封装微信小程序的异步调用</a> 2020-04-9</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022467002">改进异步封装：处理带返回值的异步调用</a> 2020-04-25</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000007987187">从地狱到天堂，Node 回调向 async/await 转变</a> 2017-01-02</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013337421">异步编程需要“意识”</a> 2018-02-23</li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011802045">从不用 try-catch 实现的 async/await 语法说错误处理</a> 2017-10-31</li>
 </ul>
-</li>
-<li>命令行窗口也是一种可以向计算机发送命令的途径<ul>
-<li>通过命令的形式告诉计算机我们要做什么</li>
-<li>mkdir 文件夹的名字</li>
-</ul>
-</li>
-<li>开启命令行<ul>
-<li>win + R -&gt; cmd -&gt; enter</li>
-</ul>
-</li>
-<li>常用命令行工具<ul>
-<li>cmd</li>
-<li>powershell</li>
-<li>git bash</li>
-</ul>
-</li>
-</ul>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
-<li>pwd (print working directory) 查看当前所在的目录</li>
-<li>cd (change directory) 切换目录</li>
-<li>ls (list) 查看当前目录下的内容(有兼容问题 可以用dir)</li>
-<li>clear 清屏（有兼容问题  可以用cls）</li>
-<li>mkdir (make directory) 创建目录</li>
-<li>touch 创建文件（有兼容问题 可以用 type nul&gt;文件名）</li>
-<li>cat 查看文件内容 一次性将所有内容输出</li>
-<li>less 查看文件内容 每一次查看部分文件内容<ul>
-<li>回车 一次向下走一行</li>
-<li>空格 一次向下走一页</li>
-<li>b（back）    一次向上走一页</li>
-<li>q（quit）    退出</li>
-</ul>
-</li>
-<li>rm (remove) 删除文件 如 rm index.html、rm -rf blog（删除有内容的文件夹）</li>
-<li>rmdir (remove directory) 删除文件夹 只能删除空文件夹 不常用</li>
-<li>mv (move) 移动文件或重命名</li>
-<li>cp (copy) 复制文件</li>
-<li>echo ‘内容’ &gt; 文件 输出内容到文件 每次输出都是覆盖原有文件内容</li>
-<li>ehco ‘内容’ &gt;&gt; 文件 输出内容到文件 每次输出都是追新内容</li>
-<li>命令的基本组成部分<ul>
-<li>rm(删除命令) -rf(选项)</li>
-</ul>
-</li>
-</ul>
-<h3 id="GIT是什么"><a href="#GIT是什么" class="headerlink" title="GIT是什么"></a>GIT是什么</h3><ul>
-<li>版本控制工具<ul>
-<li>例子：<ul>
-<li>人事专员管理职工信息</li>
-<li>项目功能变更导致的问题</li>
-<li>多人开发一个项目 代码共享时的问题</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="GIT三大区域"><a href="#GIT三大区域" class="headerlink" title="GIT三大区域"></a>GIT三大区域</h3><ul>
-<li>工作目录<ul>
-<li>存放项目代码的目录</li>
-</ul>
-</li>
-<li>暂存区<ul>
-<li>临时存放更改的了文件</li>
-<li>防止工作目录中的代码丢失</li>
-</ul>
-</li>
-<li>代码仓库<ul>
-<li>当开发的功能足以形成一个版本的时候 可以将代码形成版本提交到仓库</li>
-<li>相当于复制了一份当前的代码存储到了仓库中</li>
-</ul>
-</li>
-</ul>
-<h3 id="GIT常用命令"><a href="#GIT常用命令" class="headerlink" title="GIT常用命令"></a>GIT常用命令</h3><ul>
-<li>配置git用户名和邮箱<ul>
-<li>git config –global user.name zhangsan</li>
-<li>git config –global user.email <a href="mailto:&#x64;&#101;&#109;&#111;&#116;&#x65;&#115;&#x74;&#49;&#50;&#x33;&#x40;&#x31;&#x36;&#51;&#x2e;&#x63;&#x6f;&#109;">&#x64;&#101;&#109;&#111;&#116;&#x65;&#115;&#x74;&#49;&#50;&#x33;&#x40;&#x31;&#x36;&#51;&#x2e;&#x63;&#x6f;&#109;</a></li>
-</ul>
-</li>
-<li>查看当前的git配置<ul>
-<li>git config –list</li>
-</ul>
-</li>
-<li>初始化git仓库<ul>
-<li>git init</li>
-</ul>
-</li>
-<li>查看当前仓库的状态 <ul>
-<li>git status</li>
-</ul>
-</li>
-<li>将工作目录中的文件添加到暂存区<ul>
-<li>git add</li>
-</ul>
-</li>
-<li>将暂存区中的代码提交到本地仓库 形成一个版本<ul>
-<li>git commit -m 备注 </li>
-</ul>
-</li>
-<li>查看本地仓库中的历史提交版本<ul>
-<li>git log </li>
-</ul>
-</li>
-<li>将暂存区中的文件恢复到工作目录<ul>
-<li>git rm –cached 文件列表 </li>
-<li>说明:<ul>
-<li>必须保证工作目录中的代码和暂存区中的代码一致</li>
-<li>此时工作目录中有此文件 暂存区中没有此文件 这个文件不被git管理</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>用暂存区中的文件覆盖工作目录中的文件<ul>
-<li>git checkout – 文件列表</li>
-<li>说明：暂存区和工作目录都有此文件 这个文件依然被git管理</li>
-</ul>
-</li>
-<li>回滚到本地仓库中的特定版本并覆盖暂存区和工作目录<ul>
-<li>git reset –hard commitID</li>
-</ul>
-</li>
-<li>查看分支<ul>
-<li>git branch</li>
-</ul>
-</li>
-<li>创建分支<ul>
-<li>git branch 分支名称</li>
-</ul>
-</li>
-<li>切换分支<ul>
-<li>git checkout 分支名称</li>
-</ul>
-</li>
-<li>创建并切换分支<ul>
-<li>git checkout -b 分支名称 </li>
-</ul>
-</li>
-<li>删除分支(如果分支没有被合并不允许删除)<ul>
-<li>git branch -d 分支名称</li>
-</ul>
-</li>
-<li>删除分支(强制删除分支)<ul>
-<li>git branch -D 分支名称</li>
-</ul>
-</li>
-<li>合并分支<ul>
-<li>git merge 来源分支</li>
-</ul>
-</li>
-<li>初始化一个裸露仓库(公共代码仓库)<ul>
-<li>git init –bare </li>
-</ul>
-</li>
-<li>向远程仓库推送代码<ul>
-<li>git push 远程仓库地址 本地分支名称:远程分支名称</li>
-</ul>
-</li>
-<li>从远程仓库中拉取代码(拉取最新版本到本地 开发过程中使用)<ul>
-<li>git pull 远程仓库地址 远程分支名称:本地分支名称</li>
-</ul>
-</li>
-<li>为远程仓库地址创建别名<ul>
-<li>git remote add 别名 远程仓库地址</li>
-</ul>
-</li>
-<li>查看远程地址的详情信息<ul>
-<li>git remote -v</li>
-</ul>
-</li>
-<li>查看当前别名所对应的远程仓库地址<ul>
-<li>git remote show 别名 </li>
-</ul>
-</li>
-<li>删除当前别名及所对应的远程仓库地址<ul>
-<li>git remote remove 别名 </li>
-</ul>
-</li>
-<li>从远程仓库获取代码(拉取所有版本到本地)<ul>
-<li>git clone 远程仓库地址 项目名称</li>
-<li>使用场景：加入到已有项目的开发中 需要先拉取所有版本到本地 再进行开发</li>
-</ul>
-</li>
-<li>冲突修复<ul>
-<li>模拟冲突<ul>
-<li>张三和李四分别克隆代码到本地</li>
-<li>张三改了demo文件并提交到远端仓库</li>
-<li>李四也改了同一个文件</li>
-<li>这时因为张三已经提交了一版代码到远程仓库</li>
-<li>远程仓库的代码要比李四本地的代码新</li>
-<li>所以李四不能直接向远程仓库推送代码</li>
-<li>要先拉去再推送</li>
-<li>此时因为张三和李四改了同一个文件所以产生了冲突</li>
-<li>李四解决冲突并再次提交代码到远程仓库</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>多人协作开发免登录操作<ul>
-<li>ssh-keygen</li>
-</ul>
-</li>
-</ul>
-<h3 id="git使用流程"><a href="#git使用流程" class="headerlink" title="git使用流程"></a>git使用流程</h3><ul>
-<li>1.配置账户信息<ul>
-<li>git config –global user.name 用户名</li>
-<li>git config –global user.email 邮箱地址</li>
-<li>git config –list 查看当前的git配置</li>
-</ul>
-</li>
-<li>2.初始化本地仓库<ul>
-<li>git init</li>
-</ul>
-</li>
-<li>3.查看本地仓库的状态<ul>
-<li>git status</li>
-</ul>
-</li>
-<li>4.将工作目录中的文件提交到暂存区<ul>
-<li>git add 文件列表</li>
-<li>git add . 添加工作目录中所有的文件到暂存区</li>
-</ul>
-</li>
-<li><ol>
-<li>将暂存区中的代码提交到本地仓库<ul>
-<li>git commit -m 备注</li>
-<li>git commit -m “first commit”</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="git-忽略清单"><a href="#git-忽略清单" class="headerlink" title="git 忽略清单"></a>git 忽略清单</h3><ul>
-<li>.gitignore文件</li>
-</ul>
+<h2 id="5-关于转载"><a href="#5-关于转载" class="headerlink" title="5. 关于转载"></a>5. 关于转载</h2><p>转载自<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000007535316">思否</a> 作者<a target="_blank" rel="noopener" href="https://segmentfault.com/u/jamesfancy">边城</a></p>
 
             </div>
             <hr/>
@@ -710,7 +688,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://heyxiao.github.io/2020/11/09/%E4%B8%80%E7%AF%87%E6%9D%A5%E8%87%AA2018%E5%B9%B44%E6%9C%8817%E6%97%A5%E7%9A%84Git%E7%AC%94%E8%AE%B0/">https://heyxiao.github.io/2020/11/09/%E4%B8%80%E7%AF%87%E6%9D%A5%E8%87%AA2018%E5%B9%B44%E6%9C%8817%E6%97%A5%E7%9A%84Git%E7%AC%94%E8%AE%B0/</a>
+                    <a href="https://heyxiao.github.io/2020/11/13/%E7%90%86%E8%A7%A3%20JavaScript%20%E7%9A%84%20async&await/">https://heyxiao.github.io/2020/11/13/%E7%90%86%E8%A7%A3%20JavaScript%20%E7%9A%84%20async&await/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -748,8 +726,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Git/">
-                                    <span class="chip bg-color">Git</span>
+                                <a href="/tags/JavaScript/">
+                                    <span class="chip bg-color">JavaScript</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                    <span class="chip bg-color">转载</span>
                                 </a>
                             
                         </div>
@@ -791,9 +773,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/11/13/%E7%90%86%E8%A7%A3%20JavaScript%20%E7%9A%84%20async&await/">
                     <div class="card-image">
@@ -811,9 +794,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-11-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-13
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -826,6 +809,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -848,31 +832,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/11/07/%E8%BF%99%E4%B8%AABlog%E8%BF%98%E6%9C%89%E6%88%91/">
+                <a href="/2020/11/09/%E4%B8%80%E7%AF%87%E6%9D%A5%E8%87%AA2018%E5%B9%B44%E6%9C%8817%E6%97%A5%E7%9A%84Git%E7%AC%94%E8%AE%B0/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="这个Blog还有我">
+                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="一篇来自2018年4月17日的Git笔记">
                         
-                        <span class="card-title">这个Blog还有我</span>
+                        <span class="card-title">一篇来自2018年4月17日的Git笔记</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            主要是个人简介与博客的介绍
+                            一些比较常用的Git指令
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-07
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-09
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E8%87%B4%E6%9D%A5%E8%AE%BF%E8%80%85/" class="post-category">
-                                    致来访者
+                            <a href="/categories/Git/" class="post-category">
+                                    Git
                                 </a>
                             
                             
@@ -882,12 +866,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E4%BB%8B/">
-                        <span class="chip bg-color">个人简介</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%8D%9A%E5%AE%A2%E7%AE%80%E4%BB%8B/">
-                        <span class="chip bg-color">博客简介</span>
+                    <a href="/tags/Git/">
+                        <span class="chip bg-color">Git</span>
                     </a>
                     
                 </div>
