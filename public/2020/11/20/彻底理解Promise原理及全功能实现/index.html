@@ -1,0 +1,1762 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="彻底理解Promise原理及全功能实现, heyXiao">
+    <meta name="description" content="他在这里想做什么就做什么">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>彻底理解Promise原理及全功能实现 | heyXiao</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">heyXiao</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">heyXiao</div>
+        <div class="logo-desc">
+            
+            他在这里想做什么就做什么
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/blinkfox/hexo-theme-matery" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/blinkfox/hexo-theme-matery" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">彻底理解Promise原理及全功能实现</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/JavaScript/">
+                                <span class="chip bg-color">JavaScript</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                <span class="chip bg-color">转载</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                技术
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-11-20
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2020-11-20
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.9k
+                </div>
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="彻底理解-Promise-原理及全功能实现"><a href="#彻底理解-Promise-原理及全功能实现" class="headerlink" title="彻底理解 Promise 原理及全功能实现"></a>彻底理解 Promise 原理及全功能实现</h1><h2 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h2><p><strong>Promise</strong>作为前端异步解决方案的出现，可以说是火遍全网，几乎所有的异步场景甚至框架都会有它的身影，比如<strong>Vue</strong>的批量处理等。今天我们就按照<strong>Promise A+</strong> 规范来完整实现<strong>Promise</strong>全功能，话不多说，上代码。</p>
+<h2 id="Promise-实现"><a href="#Promise-实现" class="headerlink" title="Promise 实现"></a>Promise 实现</h2><h3 id="status-状态定义"><a href="#status-状态定义" class="headerlink" title="status 状态定义"></a>status 状态定义</h3><p><strong>Promise</strong>的设定是一个不可逆的状态机，包含：</p>
+<pre><code>const PENDDING = &quot;PENDDING&quot;; // 初始化pendding状态
+const RESOLVED = &quot;RESOLVED&quot;; // 正确完成resolve状态
+const REJECTED = &quot;REJECTED&quot;; // 错误完成reject状态</code></pre>
+<h3 id="MyPromise"><a href="#MyPromise" class="headerlink" title="MyPromise"></a>MyPromise</h3><p>创建<strong>MyPromise</strong>类函数和初始化相对应的值和状态</p>
+<pre><code>class MyPromise &#123;
+  constructor(executor) &#123;
+    // 初始化状态status
+    // 返回值value
+    // 错误原因reason
+    this.status = PENDDING;
+    this.value = undefined;
+    this.reason = undefined;
+
+    // 返回值回调队列和错误回调队列
+    this.resolves = [];
+    this.rejects = [];
+
+    // 声明resolve函数
+    const resolve = (value) =&gt; &#123;
+      if (this.status === PENDDING) &#123;
+        this.status = RESOLVED; // 变更状态为完成状态
+        this.value = value; // 赋值
+
+        // 执行resolves队列
+        while (this.resolves.length) &#123;
+          const callback = this.resolves.shift();
+          callback(value);
+        &#125;
+      &#125;
+    &#125;;
+
+    // 声明reject函数
+    const reject = (reason) =&gt; &#123;
+      if (this.statue === PENDDING) &#123;
+        this.status = REJECTED; // 变更状态为拒绝状态
+        this.reason = reason; // 赋值
+
+        // 执行rejects队列
+        while (this.rejects.length) &#123;
+          const callback = this.rejects.shift();
+          callback(reason);
+        &#125;
+      &#125;
+    &#125;;
+
+    try&#123;
+        executor(resolve,reject)
+    &#125;catch(e)&#123;
+        reject(e)
+    &#125;
+  &#125;
+&#125;</code></pre>
+<h3 id="MyPromise-then"><a href="#MyPromise-then" class="headerlink" title="MyPromise.then"></a>MyPromise.then</h3><h4 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h4><pre><code>class MyPromise &#123;
+  // ...
+  then(resolve, reject) &#123;
+    // 完成状态，推入完成队列
+    if (this.status === RESOLVED) &#123;
+      resolve(this.value);
+    &#125;
+
+    // 拒绝状态，推入拒绝队列
+    if (this.status === REJECTED) &#123;
+      reject(this.reason);
+    &#125;
+
+    // 异步情况
+    if (this.status === PENDDING) &#123;
+      this.resolves.push(resolve);
+      this.rejects.push(reject);
+    &#125;
+  &#125;
+  // ...
+&#125;
+
+// 测试同步任务
+
+const promise = new MyPromise((resolve, reject) =&gt; &#123;
+    resolve(&#39;promise sync&#39;)
+&#125;)
+
+promise.then(res =&gt; &#123;
+    console.log(res)
+&#125;)
+
+// 打印结果
+// promise sync
+
+// 测试异步任务
+const promise = new MyPromise((resolve, reject) =&gt; &#123;
+    setTimeout(() =&gt; &#123;
+        resolve(&#39;promise async)
+    &#125;, 500)
+&#125;)
+
+promise.then(res =&gt; &#123;
+    console.log(res)
+&#125;)
+
+// 打印结果
+// promise async</code></pre>
+<h4 id="Promise-A-规范场景"><a href="#Promise-A-规范场景" class="headerlink" title="Promise A+规范场景"></a>Promise A+规范场景</h4><blockquote>
+<p>根据 Promise A+ 规范，then 方法会返回一个 promise，从而支持向下链式调用。同时可以根据上一个 then 的返回值，透传给下一个 then 方法。</p>
+</blockquote>
+<pre><code>// Promise A+
+const promise = new Promise((resolve, reject) =&gt; &#123;
+  resolve(&quot;first&quot;);
+&#125;);
+
+// 第一种场景：返回常规值
+promise
+  .then((res) =&gt; &#123;
+    console.log(res);
+
+    return &quot;second&quot;;
+  &#125;)
+  .then((res) =&gt; &#123;
+    console.log(res);
+  &#125;);
+
+// 打印结果
+// first
+// second
+
+// 第二种场景：返回promise
+promise
+  .then((res) =&gt; &#123;
+    console.log(res);
+    return new Promise((resolve) =&gt; &#123;
+      resolve(&quot;promise&quot;);
+    &#125;);
+  &#125;)
+  .then((res) =&gt; &#123;
+    console.log(res);
+  &#125;);
+
+// 打印结果
+// first
+// promise
+
+// 第三种场景：值穿透
+promise
+  .then((res) =&gt; &#123;
+    console.log(res);
+    return res;
+  &#125;)
+  .then()
+  .then((res) =&gt; &#123;
+    console.log(res);
+  &#125;);
+
+// 打印结果
+// first
+// first</code></pre>
+<h4 id="实现-then"><a href="#实现-then" class="headerlink" title="实现 then"></a>实现 then</h4><p>根据以上规范定义，我们来改造一下<strong>then</strong>方法：</p>
+<pre><code>class MyPromise &#123;
+  // ...
+  then(resolve, reject) &#123;
+    // 判断resolve和reject未传入的情况，解决空值透传问题
+    // then()情况
+    typeof resolve !== &#39;function&#39; ? resolve = value =&gt; value : resolve
+    typeof reject !== &#39;function&#39; ? reject = reason =&gt; throw new Error(reason instanceof Error ? reason.message : reason )
+
+    //根据规范，then会返回一个全新的promise
+    return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+        // 重写传入的resolve方法
+        // 判断返回值
+        const fulfilished = value =&gt; &#123;
+            try&#123;
+                // 接收返回值
+                const res = resolve(value)
+
+                // 判断返回值类型：promise或普通类型
+                // 如果是promise，则往下执行一次then
+                // 如果是普通类型，则直接执行resolveFn，保证value是最新值
+                res instanceof MyPromise ? res.then(resolveFn,rejectFn) : resolveFn(res)
+            &#125;catch(e) &#123;
+                rejectFn(e)
+            &#125;
+        &#125;
+
+        // 重写传入的reject方法
+        // 判断返回值
+        const rejected = reason =&gt; &#123;
+            try&#123;
+        // 接收返回值
+                const res = reject(reason)
+
+                // 判断返回值类型：promise或普通类型
+                // 如果是promise，则往下执行一次then
+                // 如果是普通类型，则直接执行rejectFn，保证value是最新值
+                res instanceof MyPromise ? res.then(resolveFn,rejectFn) : rejectFn(res)
+            &#125;catch(e)&#123;
+                rejectFn(e instanceof Error ? e.message: e)
+            &#125;
+
+        &#125;
+
+        // 判断同步异步任务
+        // 执行相对应的方法
+        // 这里用switch方法改进
+        switch(this.status) &#123;
+            case RESOLVED:
+                fulfilished(this.value)
+            break;
+
+            case REJECTED:
+                rejected(this.reason)
+            break;
+
+            case PENDDING:
+                this.resolves.push(fulfilished)
+                this.rejects.push(rejected)
+              break;
+        &#125;
+    &#125;)
+
+  &#125;
+  // ...
+&#125;
+
+// 测试
+const promise = new MyPromise((resolve, reject) =&gt; &#123;
+    resolve(&#39;first&#39;)
+&#125;)
+
+promise.then(res =&gt; &#123;
+    console.log(res)
+    return new MyPromise((resolve, reject) =&gt; &#123;
+        resolve(&#39;promise second&#39;)
+    &#125;)
+&#125;).then().then(res =&gt; &#123;
+    console.log(res)
+    return &#39;third&#39;
+&#125;).then(res =&gt; &#123;
+    console.log(res)
+&#125;)
+
+// 打印结果
+// first
+// promise second
+// third</code></pre>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>测试成功，<strong>promise</strong>的改造就算符合规范了。这个难点在于<strong>then</strong>内函数的返回值如果是<strong>promise</strong>，那么我们会先让他执行注册一次<strong>then</strong>，让<strong>promise</strong>接着往下执行。</p>
+<h3 id="MyPromise-catch"><a href="#MyPromise-catch" class="headerlink" title="MyPromise.catch"></a>MyPromise.catch</h3><p><strong>catch</strong>方法相对比较简单，将拒绝的值放到<strong>reject</strong>方法里执行就可以。</p>
+<h4 id="Promise-A-规范场景-1"><a href="#Promise-A-规范场景-1" class="headerlink" title="Promise A+规范场景"></a>Promise A+规范场景</h4><pre><code>// Promise A+
+const promise = new Promise((resolve, reject) =&gt; &#123;
+  reject(&quot;promise reject&quot;);
+&#125;);
+
+promise.catch((e) =&gt; &#123;
+  console.log(e);
+&#125;);
+
+// 打印结果
+// promise reject</code></pre>
+<h4 id="实现-catch"><a href="#实现-catch" class="headerlink" title="实现 catch"></a>实现 catch</h4><pre><code>class MyPromise &#123;
+  // ...
+  catch(errorFn) &#123;
+    // 这里只需注册执行下then，传入callback就能实现
+    this.then(null, errorFn);
+  &#125;
+  // ...
+&#125;
+
+// 测试
+const promise = new MyPromise((resolve, reject) =&gt; &#123;
+  reject(&quot;my promise reject&quot;);
+&#125;);
+
+promise.catch((e) =&gt; &#123;
+  console.log(e);
+&#125;);
+
+// 打印结果
+// my promise reject</code></pre>
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p><strong>catch</strong>方法在于执行回调去获取<strong>reject</strong>的结果，所以只需执行一下<strong>then</strong>并传入<strong>callback</strong>就实现了，相对好理解。</p>
+<h3 id="MyPromise-all"><a href="#MyPromise-all" class="headerlink" title="MyPromise.all"></a>MyPromise.all</h3><p>业务场景中，我们经常会遇到不止一个<strong>promie</strong>的场景，因此需要合并一次执行多个<strong>promise</strong>，统一返回结果，<strong>Promise.all</strong>就是为了解决此问题。</p>
+<h4 id="Promise-A-规范场景-2"><a href="#Promise-A-规范场景-2" class="headerlink" title="Promise A+规范场景"></a>Promise A+规范场景</h4><pre><code>  // Promise A+
+  // 创建三个promise
+  const promise1 = Promise.resolve(1)
+  const promise2 = Promise.resolve(2)
+  const promise3 = Promise.resolve(3)
+
+  Promise.all([promise1,promise12,promise3]).then(res =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  // [1,2,3]
+
+  // 添加一个reject
+  const promise4 = Promise.resolve(1)
+  const promise5 = Promise.reject(&#39;reject&#39;)
+  const promise6 = Promise.resolve(3)
+
+  Promise.all([promise4, promise5,promise6]).then(res =&gt; &#123;
+    console.log(res, &#39;resolve&#39;)
+  &#125;).catch(e =&gt; &#123;
+    console.log(e)
+  &#125;)
+
+  // 打印结果
+  // reject</code></pre>
+<blockquote>
+<p>根据 Promise A+规范，Promise.all 可以同时执行多个 Promise，并且在所有的 Promise 方法都返回完成之后才返回一个数组返回值。当有其中一个 Promise reject 的时候，则返回 reject 的结果。</p>
+</blockquote>
+<h4 id="实现-Promise-all"><a href="#实现-Promise-all" class="headerlink" title="实现 Promise.all"></a>实现 Promise.all</h4><p>我们来实现一下：</p>
+<pre><code>  class MyPromise &#123;
+    // ...
+    // all是静态方法
+    static all(promises) &#123;
+      // 已然是返回一个promise
+      return new MyPromise((resolve, reject) =&gt; &#123;
+        // 创建一个收集返回值的数组
+        const result = []
+
+        // 执行
+        deepPromise(promises[0], 0 , result)
+
+        // 返回结果
+        resolve(result)
+
+        // 这里我们用递归来实现
+        // @param &#123;MyPromise&#125; promise 每一个promise方法
+        // @param &#123;number&#125; index 索引
+        // @param &#123;string[]&#125; result 收集返回结果的数组
+        function deepPromise(promise, index, result) &#123;
+          // 边界判断
+          // 所有执行完之后返回收集数组
+          if(index &gt; promises.length - 1) &#123;
+            return result
+          &#125;
+
+          if(typeof promise.then === &#39;function&#39;) &#123;
+            // 如果是promise
+            promise.then(res =&gt; &#123;
+              index++
+              result.push(res)
+              deepPromise(promises[index], index, result)
+            &#125;).catch(e =&gt; &#123;
+              // reject直接返回
+              reject(e instanceof Error ? e.message : e)
+            &#125;)
+          &#125;else &#123;
+            // 如果是普通值
+            // 这里我们只做简单判断，非promise则直接当返回值处理
+            index++
+            result.push(promise)
+            deepPromise(promises[index], index, res)
+          &#125;
+        &#125;
+      &#125;)
+
+    &#125;
+    // ...
+  &#125;
+
+  // 测试
+  // 创建三个MyPromise
+  const promise1 = MyPromise.resolve(1)
+  const promise2 = MyPromise.resolve(2)
+  const promise3 = MyPromise.resolve(3)
+
+  MyPromise.all([promise1,promise12,promise3]).then(res =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  // [1,2,3]
+
+  // 添加一个reject
+  const promise4 = MyPromise.resolve(1)
+  const promise5 = MyPromise.reject(&#39;reject&#39;)
+  const promise6 = MyPromise.resolve(3)
+
+  MyPromise.all([promise4, promise5,promise6]).then(res =&gt; &#123;
+    console.log(res, &#39;resolve&#39;)
+  &#125;).catch(e =&gt; &#123;
+    console.log(e)
+  &#125;)
+
+  // 打印结果
+  // reject</code></pre>
+<h4 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h4><p><strong>Promise.all</strong>作为一个批量处理的函数，让我们在使用时可以同时多个处理<strong>promise</strong>，简化了逐个执行的劣势。核心逻辑也相对比较简单，最重要的点在于执行完一个<strong>promise</strong>后再去执行下一个<strong>promise</strong>，处理完这个逻辑也就基本完成了<strong>Promise.all</strong>的全功能了。</p>
+<h3 id="MyPromise-resolve"><a href="#MyPromise-resolve" class="headerlink" title="MyPromise.resolve"></a>MyPromise.resolve</h3><p>静态方法<strong>resolve</strong>的实现就相对简单了，返回一个<strong>promise</strong>，传入对应参数即可。</p>
+<h4 id="实现-MyPromise-resolve"><a href="#实现-MyPromise-resolve" class="headerlink" title="实现 MyPromise.resolve"></a>实现 MyPromise.resolve</h4><pre><code>  class MyPromise &#123;
+    // ...
+    static resolve(value) &#123;
+      return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+        resolveFn(value)
+      &#125;)
+    &#125;
+    // ...
+  &#125;
+
+  // 测试
+  MyPromise.resolve(&#39;static resolve&#39;).then(res =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  // static resolve</code></pre>
+<h3 id="MyPromise-reject"><a href="#MyPromise-reject" class="headerlink" title="MyPromise.reject"></a>MyPromise.reject</h3><p>静态方法<strong>reject</strong>的实现跟<strong>resolve</strong>是类似，返回一个<strong>promise</strong>，传入对应参数即可。</p>
+<pre><code>  class MyPromise &#123;
+    // ...
+    static reject(reason) &#123;
+      return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+        rejectFn(reason)
+      &#125;)
+    &#125;
+    // ...
+  &#125;
+
+  // 测试
+  MyPromise.reject(&#39;static reject&#39;).catch(e =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  // static reject</code></pre>
+<h3 id="什么是-allSettled？"><a href="#什么是-allSettled？" class="headerlink" title="什么是 allSettled？"></a>什么是 allSettled？</h3><p>ECMA 官网最新更新了<strong>Promise</strong>的新的静态方法<strong>Promise.allSettled</strong>，那么这是一个怎样的方法呢？总体来讲他也是一个批量处理<strong>Promise</strong>的函数，但是我们已经有了<strong>Promise.all</strong>，为什么还需要<strong>allSettled</strong>。要解开这个问题，我们得回顾一下<strong>Promise.all</strong>。现有的<strong>Promise.all</strong>我们说过，如果<strong>Promise</strong>队列里有一个<strong>reject</strong>，那么他就只会返回<strong>reject</strong>，所以<strong>Promise.all</strong>不一定会返回所有结果，很显然<strong>Promise.allSettled</strong>能够解决这个问题。</p>
+<h4 id="Promise-A-测试场景"><a href="#Promise-A-测试场景" class="headerlink" title="Promise A+测试场景"></a>Promise A+测试场景</h4><pre><code>   // Promise A+
+  // 创建三个promise
+  const promise1 = Promise.resolve(1)
+  const promise2 = Promise.resolve(2)
+  const promise3 = Promise.resolve(3)
+
+  Promise.allSettled([promise1,promise12,promise3]).then(res =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  /*
+  [
+    &#123;status: &#39;fulfilished&#39;, value: 1&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 2&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 3&#125;
+  ]
+  */
+
+  // 添加一个reject
+  const promise4 = Promise.resolve(1)
+  const promise5 = Promise.reject(&#39;reject&#39;)
+  const promise6 = Promise.resolve(3)
+
+  Promise.allSettled([promise4, promise5,promise6]).then(res =&gt; &#123;
+    console.log(res, &#39;resolve&#39;)
+  &#125;).catch(e =&gt; &#123;
+    console.log(e)
+  &#125;)
+
+  // 打印结果
+   /*
+  [
+    &#123;status: &#39;fulfilished&#39;, value: 1&#125;,
+    &#123;status: &#39;rejected&#39;, value: &#39;reject&#39;&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 3&#125;
+  ]
+  */</code></pre>
+<p>可以看出来<strong>allSettled</strong>和 all 最大的区别就是，<strong>allSettled</strong>不管是<strong>resolve</strong>，还是<strong>reject</strong>都能完整返回结果数组，只不过每个数组项都是以对象的形式输出，<strong>status</strong>描述状态，<strong>value</strong>接收返回值。</p>
+<h4 id="实现-MyPromise-allSettled"><a href="#实现-MyPromise-allSettled" class="headerlink" title="实现 MyPromise.allSettled"></a>实现 MyPromise.allSettled</h4><p><strong>allSettled</strong>的整体逻辑跟<strong>all</strong>是一样的，只不过返回值的处理稍微有所不同</p>
+<pre><code>  class MyPromise &#123;
+// ...
+  static allSettled(promises) &#123;
+      // 已然是返回一个promise
+      return new MyPromise((resolve, reject) =&gt; &#123;
+        // 创建一个收集返回值的数组
+        const result = []
+
+        // 执行
+        deepPromise(promises[0], 0 , result)
+
+        // 返回结果
+        resolve(result)
+
+        // 这里我们用递归来实现
+        // @param &#123;MyPromise&#125; promise 每一个promise方法
+        // @param &#123;number&#125; index 索引
+        // @param &#123;string[]&#125; result 收集返回结果的数组
+        function deepPromise(promise, index, result) &#123;
+          // 边界判断
+          // 所有执行完之后返回收集数组
+          if(index &gt; promises.length - 1) &#123;
+            return result
+          &#125;
+
+          if(typeof promise.then === &#39;function&#39;) &#123;
+            // 如果是promise
+            promise.then(res =&gt; &#123;
+              index++
+              result.push(&#123;status: &#39;fulfilished&#39;, value: res&#125;) // 这里推入的是对象
+              deepPromise(promises[index], index, result)
+            &#125;).catch(e =&gt; &#123;
+              // reject直接返回
+              index ++
+              result.push(&#123;status: &#39;rejected&#39;, value: res&#125;) // 这里推入的是对象
+              deepPromise(promises[index], index, result)
+            &#125;)
+          &#125;else &#123;
+            // 如果是普通值
+            // 这里我们只做简单判断，非promise则直接当返回值处理
+            index++
+            result.push(&#123;status: &#39;fulfilished&#39;, value: res&#125;) // 这里推入的是对象
+            deepPromise(promises[index], index, res)
+          &#125;
+        &#125;
+      &#125;)
+
+    &#125;
+  // ...
+  &#125;
+
+  // 测试
+  // 创建三个promise
+  const promise1 = MyPromise.resolve(1)
+  const promise2 = MyPromise.resolve(2)
+  const promise3 = MyPromise.resolve(3)
+
+  MyPromise.allSettled([promise1,promise12,promise3]).then(res =&gt; &#123;
+    console.log(res)
+  &#125;)
+
+  // 打印结果
+  /*
+  [
+    &#123;status: &#39;fulfilished&#39;, value: 1&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 2&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 3&#125;
+  ]
+  */
+
+  // 添加一个reject
+  const promise4 = MyPromise.resolve(1)
+  const promise5 = MyPromise.reject(&#39;reject&#39;)
+  const promise6 = MyPromise.resolve(3)
+
+  Promise.allSettled([promise4, promise5,promise6]).then(res =&gt; &#123;
+    console.log(res, &#39;resolve&#39;)
+  &#125;).catch(e =&gt; &#123;
+    console.log(e)
+  &#125;)
+
+  // 打印结果
+   /*
+  [
+    &#123;status: &#39;fulfilished&#39;, value: 1&#125;,
+    &#123;status: &#39;rejected&#39;, value: &#39;reject&#39;&#125;,
+    &#123;status: &#39;fulfilished&#39;, value: 3&#125;
+  ]
+  */</code></pre>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><pre><code>class MyPromise &#123;
+  constructor(executor) &#123;
+    // 初始化状态status
+    // 返回值value
+    // 错误原因reason
+    this.statue = PENDDING;
+    this.value = undefined;
+    this.reason = undefined;
+
+    // 返回值回调队列和错误回调队列
+    this.resolves = [];
+    this.rejects = [];
+
+    // 声明resolve函数
+    const resolve = (value) =&gt; &#123;
+      if (this.status === PENDDING) &#123;
+        this.status = RESOLVED; // 变更状态为完成状态
+        this.value = value; // 赋值
+
+        // 执行resolves队列
+        while (this.resolves.length) &#123;
+          const callback = this.resolves.shift();
+          callback(value);
+        &#125;
+      &#125;
+    &#125;;
+
+    // 声明reject函数
+    const reject = (reason) =&gt; &#123;
+      if (this.statue === PENDDING) &#123;
+        this.status = REJECTED; // 变更状态为拒绝状态
+        this.reason = reason; // 赋值
+
+        // 执行rejects队列
+        while (this.rejects.length) &#123;
+          const callback = this.rejects.shift();
+          callback(reason);
+        &#125;
+      &#125;
+    &#125;;
+
+    try&#123;
+        executor(resolve,reject)
+    &#125;catch(e)&#123;
+        reject(e)
+    &#125;
+  &#125;
+
+  // then
+  then(resolve, reject) &#123;
+    // 判断resolve和reject未传入的情况，解决空值透传问题
+    // then()情况
+    typeof resolve !== &#39;function&#39; ? resolve = value =&gt; value : resolve
+    typeof reject !== &#39;function&#39; ? reject = reason =&gt; throw new Error(reason instanceof Error ? reason.message : reason): reject
+
+    //根据规范，then会返回一个全新的promise
+    return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+        // 重写传入的resolve方法
+        // 判断返回值
+        const fulfilished = value =&gt; &#123;
+            try&#123;
+                // 接收返回值
+                const res = resolve(value)
+
+                // 判断返回值类型：promise或普通类型
+                // 如果是promise，则往下执行一次then
+                // 如果是普通类型，则直接执行resolveFn，保证value是最新值
+                res instanceof MyPromise ? MyPromise.then(resolveFn,rejectFn) : resolveFn(res)
+            &#125;catch(e) &#123;
+                rejectFn(e)
+            &#125;
+        &#125;
+
+        // 重写传入的reject方法
+        // 判断返回值
+        const rejected = reason =&gt; &#123;
+            try&#123;
+        // 接收返回值
+                const res = reject(reason)
+
+                // 判断返回值类型：promise或普通类型
+                // 如果是promise，则往下执行一次then
+                // 如果是普通类型，则直接执行rejectFn，保证value是最新值
+                res instanceof MyPromise ? MyPromise.then(resolveFn,rejectFn) : rejectFn(res)
+            &#125;catch(e)&#123;
+                rejectFn(e instanceof Error ? e.message: e)
+            &#125;
+
+        &#125;
+
+        // 判断同步异步任务
+        // 执行相对应的方法
+        // 这里用switch方法改进
+        switch(this.status) &#123;
+            case RESOLVED:
+                fulfilished(this.value)
+            break;
+
+            case REJECTED:
+                rejected(this.reason)
+            break;
+
+            case PENDDING:
+                this.resolves.push(fulfilished)
+                this.rejects.push(rejected)
+              break;
+        &#125;
+    &#125;)
+
+  &#125;
+
+  catch(errorFn) &#123;
+    // 这里只需注册执行下then，传入callback就能实现
+    this.then(null, errorFn);
+  &#125;
+
+  // resolve
+  static resolve(value) &#123;
+    return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+      resolveFn(value)
+    &#125;)
+  &#125;
+
+    // reject
+  static reject(reason) &#123;
+    return new MyPromise((resolveFn, rejectFn) =&gt; &#123;
+      rejectFn(reason)
+    &#125;)
+  &#125;
+
+  // all
+  static all(promises) &#123;
+    // 已然是返回一个promise
+    return new MyPromise((resolve, reject) =&gt; &#123;
+      // 创建一个收集返回值的数组
+      const result = []
+
+      // 执行
+      deepPromise(promises[0], 0 , result)
+
+      // 返回结果
+      resolve(result)
+
+      // 这里我们用递归来实现
+      // @param &#123;MyPromise&#125; promise 每一个promise方法
+      // @param &#123;number&#125; index 索引
+      // @param &#123;string[]&#125; result 收集返回结果的数组
+      function deepPromise(promise, index, result) &#123;
+        // 边界判断
+        // 所有执行完之后返回收集数组
+        if(index &gt; promises.length - 1) &#123;
+          return result
+        &#125;
+
+        if(typeof promise.then === &#39;function&#39;) &#123;
+          // 如果是promise
+          promise.then(res =&gt; &#123;
+            index++
+            result.push(res)
+            deepPromise(promises[index], index, result)
+          &#125;).catch(e =&gt; &#123;
+            // reject直接返回
+            reject(e instanceof Error ? e.message : e)
+          &#125;)
+        &#125;else &#123;
+          // 如果是普通值
+          // 这里我们只做简单判断，非promise则直接当返回值处理
+          index++
+          result.push(promise)
+          deepPromise(promises[index], index, res)
+        &#125;
+      &#125;
+    &#125;)
+
+  &#125;
+
+  // allSettled
+  static allSettled(promises) &#123;
+      // 已然是返回一个promise
+      return new MyPromise((resolve, reject) =&gt; &#123;
+        // 创建一个收集返回值的数组
+        const result = []
+
+        // 执行
+        deepPromise(promises[0], 0 , result)
+
+        // 返回结果
+        resolve(result)
+
+        // 这里我们用递归来实现
+        // @param &#123;MyPromise&#125; promise 每一个promise方法
+        // @param &#123;number&#125; index 索引
+        // @param &#123;string[]&#125; result 收集返回结果的数组
+        function deepPromise(promise, index, result) &#123;
+          // 边界判断
+          // 所有执行完之后返回收集数组
+          if(index &gt; promises.length - 1) &#123;
+            return result
+          &#125;
+
+          if(typeof promise.then === &#39;function&#39;) &#123;
+            // 如果是promise
+            promise.then(res =&gt; &#123;
+              index++
+              result.push(&#123;status: &#39;fulfilished&#39;, value: res&#125;) // 这里推入的是对象
+              deepPromise(promises[index], index, result)
+            &#125;).catch(e =&gt; &#123;
+              // reject直接返回
+              index ++
+              result.push(&#123;status: &#39;rejected&#39;, value: res&#125;) // 这里推入的是对象
+              deepPromise(promises[index], index, result)
+            &#125;)
+          &#125;else &#123;
+            // 如果是普通值
+            // 这里我们只做简单判断，非promise则直接当返回值处理
+            index++
+            result.push(&#123;status: &#39;fulfilished&#39;, value: res&#125;) // 这里推入的是对象
+            deepPromise(promises[index], index, res)
+          &#125;
+        &#125;
+      &#125;)
+
+    &#125;
+&#125;</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此<strong>Promise A+**的完整的方法和实现就完成了，个人觉得实现</strong>promise<strong>的难点在于理解</strong>then**的值如何处理透传，这一个点能够理解的话，其它方法和逻辑都会比较顺其自然</p>
+<h2 id="关于转载"><a href="#关于转载" class="headerlink" title="关于转载"></a>关于转载</h2><p>转载自<a target="_blank" rel="noopener" href="https://juejin.cn/post/6866372840451473415#heading-0">掘金</a> 作者<a target="_blank" rel="noopener" href="https://juejin.cn/user/448256474885159">MichaelHong</a></p>
+
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">heyXiao</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://heyxiao.github.io/2020/11/20/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3Promise%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%A8%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/">https://heyxiao.github.io/2020/11/20/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3Promise%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%A8%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">heyXiao</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/JavaScript/">
+                                    <span class="chip bg-color">JavaScript</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                    <span class="chip bg-color">转载</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2020/11/20/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3Promise%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%A8%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="彻底理解Promise原理及全功能实现">
+                        
+                        <span class="card-title">彻底理解Promise原理及全功能实现</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Promise 作为前端异步解决方案的出现，可以说是火遍全网，几乎所有的异步场景甚至框架都会有它的身影
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    技术
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/JavaScript/">
+                        <span class="chip bg-color">JavaScript</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">转载</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/11/17/%E6%8F%90%E4%B8%8A%E6%97%A5%E7%A8%8B%E7%9A%84%E5%87%A0%E4%BB%B6%E4%BA%8B/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="提上日程的几件事">
+                        
+                        <span class="card-title">提上日程的几件事</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            快要结束的一年的总结
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-17
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E9%9A%8F%E7%AC%94/" class="post-category">
+                                    随笔
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%9A%8F%E7%AC%94/">
+                        <span class="chip bg-color">随笔</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: heyXiao<br />'
+            + '文章作者: heyXiao<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="/about" target="_blank">heyXiao</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">9.7k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/heyXiao" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:heylheyz@163.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=598878973" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 598878973" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
