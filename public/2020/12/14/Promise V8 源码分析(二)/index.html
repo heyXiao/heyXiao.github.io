@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="这个Blog还有我, heyXiao">
+    <meta name="keywords" content="Promise V8 源码分析(二), heyXiao">
     <meta name="description" content="他在这里想做什么就做什么">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>这个Blog还有我 | heyXiao</title>
+    <title>Promise V8 源码分析(二) | heyXiao</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -277,12 +277,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">这个Blog还有我</h1>
+                    <h1 class="description center-align post-title">Promise V8 源码分析(二)</h1>
                 </div>
             </div>
         </div>
@@ -399,12 +399,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E4%BB%8B/">
-                                <span class="chip bg-color">个人简介</span>
+                            <a href="/tags/JavaScript/">
+                                <span class="chip bg-color">JavaScript</span>
                             </a>
                         
-                            <a href="/tags/%E5%8D%9A%E5%AE%A2%E7%AE%80%E4%BB%8B/">
-                                <span class="chip bg-color">博客简介</span>
+                            <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                <span class="chip bg-color">转载</span>
                             </a>
                         
                     </div>
@@ -415,8 +415,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E8%87%B4%E6%9D%A5%E8%AE%BF%E8%80%85/" class="post-category">
-                                致来访者
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                技术
                             </a>
                         
                     </div>
@@ -428,21 +428,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-11-07
+                    2020-12-14
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-11-10
+                    2020-12-14
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    533
+                    2.4k
                 </div>
                 
 
@@ -454,12 +454,231 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="这个Blog还有我"><a href="#这个Blog还有我" class="headerlink" title="这个Blog还有我"></a>这个Blog还有我</h1><hr>
-<h2 id="个人简介"><a href="#个人简介" class="headerlink" title="个人简介"></a>个人简介</h2><p><strong>我</strong> 是一名前端工程师，性别男，97年，老家安徽。母校安徽财贸职业学院，在校专业软工，15年下半年左右开始前端工作，目前在合肥市。<br><strong>兴趣爱好：</strong> 听音乐，排球，羽毛球，骑车<br><strong>Favor：</strong> 周末、月末、发薪日、节日会犒劳一下自己，某天加班久了大概率也会，应该是一种代偿心理，现在打算改为每两周一次；汉堡王及馥郁多汁的肉类，比较喜欢；不是耳机发烧友，只是为了更好的听自己喜欢的歌；天文望远镜，一直想买但是没买，主要是不在家。<br><strong>联系方式：</strong> 手机：18856980690 邮箱：<a href="mailto:&#x68;&#x65;&#121;&#x6c;&#x68;&#101;&#x79;&#122;&#x40;&#49;&#x36;&#x33;&#46;&#x63;&#x6f;&#x6d;">&#x68;&#x65;&#121;&#x6c;&#x68;&#101;&#x79;&#122;&#x40;&#49;&#x36;&#x33;&#46;&#x63;&#x6f;&#x6d;</a></p>
-<h5 id="技能简介"><a href="#技能简介" class="headerlink" title="技能简介"></a>技能简介</h5><p><strong>技术栈</strong> H5、C3、JS、Vue、uni-app，以上熟练，不敢说精通。React、RN、Flutter、Taro，只是涉猎。<br><strong>PC端</strong> 企业站及后台管理系统，自适应及兼容基本没问题，因为兼容低版本IE很少遇到了，比较炫酷的CSS会费劲。<br><strong>移动端</strong> 现在比较依赖uni-app来开发，之前用京东的Taro做过微信小程序，支付宝小程序也做过。移动端兼容适配熟练。<br><strong>业务能力</strong> 10分给7分，各种情况自己能考虑到绝大部分。框架修改组件开发无压力，但是有现成的就偏向于用轮子。</p>
-<h5 id="自我评价"><a href="#自我评价" class="headerlink" title="自我评价"></a>自我评价</h5><p>待人友好，对社交关系比较重视。熟练的前端开发工程师，上手能力强，正在积极突破技术，看薪资补贴及氛围接受长期加班及非双休。</p>
-<h2 id="博客简介"><a href="#博客简介" class="headerlink" title="博客简介"></a>博客简介</h2><p><strong>这里是我技术的总结，是我工作经历的记录，是我日常生活的描述。</strong></p>
-<h2 id="其他的事情"><a href="#其他的事情" class="headerlink" title="其他的事情"></a>其他的事情</h2><p>很惭愧，接触IT行业5年左右了，才想起来做自己的博客，也没打算说做的多么好，只要还在工作，就会一直记录。<br>感谢 <a target="_blank" rel="noopener" href="https://github.com/blinkfox">blinkfox</a>和<a target="_blank" rel="noopener" href="https://github.com/blinkfox/hexo-theme-matery">hexo-theme-matery</a>，Ta的文章与Hexo主题帮助我建立了这个博客。</p>
+                <p>基于 node 版本 14.13.0，V8 版本 8.4.371。本文介绍的内容是 reject、catch 和 then 的链式调用。</p>
+<h2 id="reject"><a href="#reject" class="headerlink" title="reject"></a>reject</h2><pre><code>new Promise((resolve, reject) =&gt; &#123;
+  setTimeout(_ =&gt; reject(&#39;rejected&#39;), 5000)
+&#125;).then(_ =&gt; &#123;
+  console.log(&#39;fulfilled&#39;)
+&#125;, reason =&gt; &#123;
+  console.log(reason)
+&#125;)</code></pre>
+<p>上述代码 5s 后执行 reject 函数，控制台打印 rejected。reject 函数调用了 V8 的 <a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#210">RejectPromise</a> 函数，源码如下：</p>
+<pre><code>transitioning builtin
+RejectPromise(implicit context: Context)(
+    promise: JSPromise, reason: JSAny, debugEvent: Boolean): JSAny &#123;
+  // 取出 Promise 的处理对象 PromiseReaction
+  const reactions =
+      UnsafeCast&lt;(Zero | PromiseReaction)&gt;(promise.reactions_or_result);
+  // 这里的 reason 就是 reject 函数的参数
+  promise.reactions_or_result = reason;
+  // 设置 Promise 的状态为 rejected
+  promise.SetStatus(PromiseState::kRejected);
+  TriggerPromiseReactions(reactions, reason, kPromiseReactionReject);
+  return Undefined;
+&#125;</code></pre>
+<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#140">TriggerPromiseReactions</a> 函数在上一篇文章分析过，功能是将 Promise 处理函数相关的 PromiseReaction 链表，反转后依次插入 V8 的 microtask 队列，TriggerPromiseReactions 源码继续删减如下：</p>
+<pre><code>// https://tc39.es/ecma262/#sec-triggerpromisereactions
+transitioning macro TriggerPromiseReactions(implicit context: Context)(
+    reactions: Zero|PromiseReaction, argument: JSAny,
+    reactionType: constexpr PromiseReactionType): void &#123;
+  // 删减了链表反转的代码
+  let current = reactions;
+  // reactions 是一个链表，下面的 while 循环遍历链表
+  while (true) &#123;
+    typeswitch (current) &#123;
+      case (Zero): &#123;
+        break;
+      &#125;
+      case (currentReaction: PromiseReaction): &#123;
+        // 取出链表下一个结点
+        current = currentReaction.next;
+        // 调用 MorphAndEnqueuePromiseReaction，将当前节点插入 microtask 队列
+        MorphAndEnqueuePromiseReaction(currentReaction, argument, reactionType);
+      &#125;
+    &#125;
+  &#125;
+&#125;</code></pre>
+<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#84">MorphAndEnqueuePromiseReaction</a> 将 PromiseReaction 转为 microtask，最终插入 microtask 队列，morph 本身有转变/转化的意思，比如 Polymorphism (多态)。</p>
+<p>MorphAndEnqueuePromiseReaction 接收 3 个参数，PromiseReaction 是前面提到的包装了 Promise 处理函数的链表对象，argument 是 resolve/reject 的参数，reactionType 表示 Promise 最终的状态，fulfilled 状态对应的值是 kPromiseReactionFulfill，rejected 状态对应的值是 kPromiseReactionReject。MorphAndEnqueuePromiseReaction 的逻辑很简单，因为此时已经知道了 Promise 的最终状态，所以可以从 promiseReaction 对象得到 promiseReactionJobTask 对象，promiseReactionJobTask 的变量命名与 ECMA 规范相关描述一脉相承，其实就是传说中的 microtask。MorphAndEnqueuePromiseReaction 源码如下，仅保留了和本小节相关的内容。</p>
+<pre><code>transitioning macro MorphAndEnqueuePromiseReaction(implicit context: Context)(
+    promiseReaction: PromiseReaction, argument: JSAny,
+    reactionType: constexpr PromiseReactionType): void &#123;
+  let primaryHandler: Callable|Undefined;
+  let secondaryHandler: Callable|Undefined;
+  if constexpr (reactionType == kPromiseReactionFulfill) &#123;
+    primaryHandler = promiseReaction.fulfill_handler;
+    secondaryHandler = promiseReaction.reject_handler;
+  &#125; else &#123;
+    primaryHandler = promiseReaction.reject_handler;
+    secondaryHandler = promiseReaction.fulfill_handler;
+  &#125;
+  const handlerContext: Context =
+      ExtractHandlerContext(primaryHandler, secondaryHandler);
+  if constexpr (reactionType == kPromiseReactionFulfill) &#123;
+    // 删
+  &#125; else &#123;
+    * UnsafeConstCast(&amp; promiseReaction.map) =
+        PromiseRejectReactionJobTaskMapConstant();
+    const promiseReactionJobTask =
+        UnsafeCast&lt;PromiseRejectReactionJobTask&gt;(promiseReaction);
+    // argument 是 reject 的参数
+    promiseReactionJobTask.argument = argument;
+    promiseReactionJobTask.context = handlerContext;
+    // handler 是 JS 层面 then 方法的第二个参数，或 catch 方法的参数
+    promiseReactionJobTask.handler = primaryHandler;
+    // promiseReactionJobTask 就是那个工作中经常被反复提起的 microtask
+    // EnqueueMicrotask 将 microtask 插入 microtask 队列
+    EnqueueMicrotask(handlerContext, promiseReactionJobTask);
+  &#125;
+&#125;</code></pre>
+<p>reject 和 resolve 的逻辑基本相同，分为 3 步：</p>
+<ul>
+<li>设置 Promise 的 value/reason，也就是 resolve/reject 的参数</li>
+<li>设置 Promise 的状态：fulfilled/rejected</li>
+<li>从之前调用 then/catch 方法时收集到的依赖，也就是 promiseReaction 对象，得到一个个 microtask，最后将 microtask 插入 microtask 队列</li>
+</ul>
+<h2 id="catch"><a href="#catch" class="headerlink" title="catch"></a>catch</h2><pre><code>new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(reject, 2000)
+&#125;).catch(_ =&gt; &#123;
+    console.log(&#39;rejected&#39;)
+&#125;)</code></pre>
+<p>以上面代码为例，当 catch 方法执行时，调用了 V8 的 <a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-constructor.tq#100">PromisePrototypeCatch</a> 方法，源码如下：</p>
+<pre><code>transitioning javascript builtin
+PromisePrototypeCatch(
+    js-implicit context: Context, receiver: JSAny)(onRejected: JSAny): JSAny &#123;
+  const nativeContext = LoadNativeContext(context);
+  return UnsafeCast&lt;JSAny&gt;(
+      InvokeThen(nativeContext, receiver, Undefined, onRejected));
+&#125;</code></pre>
+<p>PromisePrototypeCatch 的源码确实只有就这几行，除了调用 InvokeThen 方法再无其它 。从名字可以推测出，InvokeThen 调用的是 Promise 的 then 方法，<a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-misc.tq#199">InvokeThen</a> 源码如下：</p>
+<pre><code>transitioning
+macro InvokeThen&lt;F: type&gt;(implicit context: Context)(
+    nativeContext: NativeContext, receiver: JSAny, arg1: JSAny, arg2: JSAny,
+    callFunctor: F): JSAny &#123;
+  if (!Is&lt;Smi&gt;(receiver) &amp;&amp;
+      IsPromiseThenLookupChainIntact(
+          nativeContext, UnsafeCast&lt;HeapObject&gt;(receiver).map)) &#123;
+    const then =
+        UnsafeCast&lt;JSAny&gt;(nativeContext[NativeContextSlot::PROMISE_THEN_INDEX]);
+    // 重点在下面一行，调用 then 方法并返回，两个分支都一样
+    return callFunctor.Call(nativeContext, then, receiver, arg1, arg2);
+  &#125; else
+    deferred &#123;
+      const then = UnsafeCast&lt;JSAny&gt;(GetProperty(receiver, kThenString));
+      // 重点在下面一行，调用 then 方法并返回，两个分支都一样
+      return callFunctor.Call(nativeContext, then, receiver, arg1, arg2);
+    &#125;
+&#125;</code></pre>
+<p>InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本小节的 JS 示例代码走的是 if 分支。先是拿到 V8 原生的 then 方法，然后通过 callFunctor.Call(nativeContext, then, receiver, arg1, arg2) 调用 then 方法。then 方法上一篇文章有提及，这里不再赘述。</p>
+<p>既然 catch 方法底层调用了 then 方法，那么 catch 方法也有和 then 方法一样的返回值，catch 方法可以继续抛出异常，可以继续链式调用。</p>
+<pre><code>new Promise((resolve, reject) =&gt; &#123;
+    setTimeout(reject, 2000)
+&#125;).catch(_ =&gt; &#123;
+    throw &#39;rejected&#39;
+&#125;).catch(_ =&gt; &#123;
+    console.log(&#39;last catch&#39;)
+&#125;)</code></pre>
+<p>上面的代码第 2 个 catch 捕获第 1 个 catch 抛出的异常，最后打印 last catch。</p>
+<blockquote>
+<p>catch 方法通过底层调用 then 方法来实现<br>假如 obj 是一个 Promise 对象，JS 层面 obj.catch(onRejected) 等价于 obj.then(undefined, onRejected)</p>
+</blockquote>
+<h2 id="then-的链式调用与-microtask-队列"><a href="#then-的链式调用与-microtask-队列" class="headerlink" title="then 的链式调用与 microtask 队列"></a>then 的链式调用与 microtask 队列</h2><pre><code>Promise.resolve(&#39;123&#39;)
+    .then(() =&gt; &#123;throw new Error(&#39;456&#39;)&#125;)
+    .then(_ =&gt; &#123;
+        console.log(&#39;shouldnot be here&#39;)
+    &#125;)
+    .catch((e) =&gt; console.log(e))
+    .then((data) =&gt; console.log(data));</code></pre>
+<p>以上代码运行后，打印 Error: 456 和 undefined。为了便于叙述，将 then 的链式调用写法改为啰嗦写法。</p>
+<pre><code>const p0 = Promise.resolve(&#39;123&#39;)
+const p1 = p0.then(() =&gt; &#123;throw new Error(&#39;456&#39;)&#125;)
+const p2 = p1.then(_ =&gt; &#123;
+    console.log(&#39;shouldnot be here&#39;)
+&#125;)
+const p3 = p2.catch((e) =&gt; console.log(e))
+const p4 = p3.then((data) =&gt; console.log(data));</code></pre>
+<p>then 方法返回新的 Promise，所以 p0、p1、p2、p3 和 p4 这 5 个 Promise 互不相等。</p>
+<p>p0 开始便处于 fulfilled 状态，当执行</p>
+<pre><code>const p1 = p0.then(() =&gt; &#123;throw new Error(&#39;456&#39;)&#125;)</code></pre>
+<p>时，由于 p0 已是 fulfilled 状态，直接将 p0 的 fulfilled 处理函数插入 microtask 队列，此时 microtask 队列简略示意图如下，绿色区域表示 microtask，蓝色区域表示 microtask 队列。</p>
+<p><img src="https://pic1.zhimg.com/v2-b76765948999a1a9792f5caee63e9f20_b.jpg"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-b76765948999a1a9792f5caee63e9f20_720w.jpg"></p>
+<p>跑完余下所有的代码。</p>
+<pre><code>const p1 = p0.then(() =&gt; &#123;throw new Error(&#39;456&#39;)&#125;)
+const p2 = p1.then(_ =&gt; &#123;
+    console.log(&#39;shouldnot be here&#39;)
+&#125;)
+const p3 = p2.catch((e) =&gt; console.log(e))
+const p4 = p3.then((data) =&gt; console.log(data));</code></pre>
+<p>p1、p2、p3 和 p4 这 4 个 Promise 都处于 pending 状态，microtask 队列还是</p>
+<p><img src="https://pic1.zhimg.com/v2-b76765948999a1a9792f5caee63e9f20_b.jpg"></p>
+<p><img src="https://pic1.zhimg.com/80/v2-b76765948999a1a9792f5caee63e9f20_720w.jpg"></p>
+<p>开始执行 microtask 队列，核心方法是 <a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/builtins-microtask-queue-gen.cc#114">MicrotaskQueueBuiltinsAssembler::RunSingleMicrotask</a>，代码是用 CodeStubAssembler 写的，代码很长，逻辑简单，评论区经常有提看不懂 CodeStubAssembler 这种类汇编语言，这里就不再贴代码了，预计之后的版本 V8 会用 Torque 重写。</p>
+<p>在执行 microtask 的过程中，MicrotaskQueueBuiltinsAssembler::RunSingleMicrotask 会调用 <a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-reaction-job.tq#43">PromiseReactionJob</a>，源码如下：</p>
+<pre><code>transitioning
+macro PromiseReactionJob(
+    context: Context, argument: JSAny, handler: Callable|Undefined,
+    promiseOrCapability: JSPromise|PromiseCapability|Undefined,
+    reactionType: constexpr PromiseReactionType): JSAny &#123;
+  if (handler == Undefined) &#123;
+    // 没有处理函数的 case，透传上一个 Promise 的 argument 和状态
+    if constexpr (reactionType == kPromiseReactionFulfill) &#123;
+      // 基本类同 JS 层的 resolve
+      return FuflfillPromiseReactionJob(
+          context, promiseOrCapability, argument, reactionType);
+    &#125; else &#123;
+      // 基本类同 JS 层的 reject
+      return RejectPromiseReactionJob(
+          context, promiseOrCapability, argument, reactionType);
+    &#125;
+  &#125; else &#123;
+    try &#123;
+      // 试图调用 Promise 处理函数，相当于 handler(argument)
+      const result =
+          Call(context, UnsafeCast&lt;Callable&gt;(handler), Undefined, argument);
+        // 基本类同 JS 层的 resolve
+        return FuflfillPromiseReactionJob(
+            context, promiseOrCapability, result, reactionType);
+    &#125; catch (e) &#123;
+      // 基本类同 JS 层的 reject
+      return RejectPromiseReactionJob(
+          context, promiseOrCapability, e, reactionType);
+    &#125;
+  &#125;
+&#125;</code></pre>
+<p>PromiseReactionJob 接收的参数和 microtask 密切相关，当下 argument 参数是 ‘123’，handler 是函数 () =&gt; {throw new Error(‘456’)}，promiseOrCapability 是 p1，reactionType 是 kPromiseReactionFulfill。</p>
+<p>handler 有值，进入 else 分支，在 try…catch 包裹下，试图调用 handler。handler 里 throw new Error(‘456’) 抛出异常，被 catch 捕捉，调用 RejectPromiseReactionJob 方法，从函数名字也可以看出，p1 最终状态为 rejected。后面的代码和 JS 层面直接调用 reject 代码差不多，向 microtask 队列插入一个 microtask，这里不再赘述。当前 microtask 执行完毕后，会从 microtask 队列移除。</p>
+<p>新增一个新 microtask，移除一个旧 microtask 后，microtask 队列简略示意图如下：</p>
+<p><img src="https://pic3.zhimg.com/v2-8e7fbe19cb37343a03863586d5010392_b.jpg"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-8e7fbe19cb37343a03863586d5010392_720w.jpg"></p>
+<p>handler 为 undefined 的原因是 p1 的最终状态是 rejected，但却没有 rejected 状态的处理函数。</p>
+<p>开始执行下一个 microtask，还是调用上文提到的 PromiseReactionJob，argument 参数为 Error(‘456’)，handler 是 undefined，promiseOrCapability 是 p2，reactionType 是 kPromiseReactionReject。由于 handler 是 undefined，这一次走的是 if 分支，最终调用了 RejectPromiseReactionJob，将 p2 状态置为 rejected。p1 相当于一个中转站，收到了 Error(‘456’)，自己没有相应状态的处理函数，把从 p0 收到的 Error(‘456’) 和 rejected 状态继续向下传给了 p2。执行完当前 microtask 后，microtask 队列的简略示意图如下：</p>
+<p><img src="https://pic2.zhimg.com/v2-7bd35a3021afe3a62d96da69bfa51991_b.jpg"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-7bd35a3021afe3a62d96da69bfa51991_720w.jpg"></p>
+<p>还是执行下一个 microtask，还是调用 PromiseReactionJob，argument 是 Error(‘456’)，handler 是 (e) =&gt; console.log(e)，promiseOrCapability 是 p3，reactionType 是 kPromiseReactionReject。在 try…catch 中试图 handler，handler 不再抛异常，打印 Error(‘456’)，返回 undefined。最后调用 FuflfillPromiseReactionJob，使 p3 最终状态是 fulfilled。执行完当前 microtask 后，microtask 队列的简略示意图如下：</p>
+<p><img src="https://pic2.zhimg.com/v2-52b0effde7fe63bbcf2859084bfdf549_b.jpg"></p>
+<p><img src="https://pic2.zhimg.com/80/v2-52b0effde7fe63bbcf2859084bfdf549_720w.jpg"></p>
+<p>后面的流程和之前一样，就不解释了，上一个 microtask 的 handler (e) =&gt; console.log(e) 的返回值是 undefined，所以 (data) =&gt; console.log(data) 打印 undefined。</p>
+<p>执行完所有 microtask 后，p0、p1、p2、p3 和 p4 状态如下，图是从浏览器控制台截的。</p>
+<p><img src="https://pic3.zhimg.com/v2-0ac8534809d172ba5c83909e762adfb6_b.jpg"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-0ac8534809d172ba5c83909e762adfb6_720w.jpg"></p>
+<p>回头再看这段代码，catch 在这里的作用相当于是把一个 rejected 状态的 Promise 链路，恢复成 fulfilled 状态，使后面的处理函数 (data)=&gt; console.log(data) 得到执行的机会。</p>
+<pre><code>// 链式调用，每一级接收上一级的 argument 和状态(fulfilled/rejected)
+// 调用本级的 handler，将本级的 argument 和状态传给下一级
+// 有点类似数组的 reduce 方法
+Promise.resolve(&#39;123&#39;)
+    .then(() =&gt; &#123;throw new Error(&#39;456&#39;)&#125;)
+    .then(_ =&gt; &#123;
+        console.log(&#39;shouldnot be here&#39;)
+    &#125;)
+    // catch 在这里的作用相当于是把一个 rejected 状态的 Promise 链路
+    // 恢复成 fulfilled 状态
+    .catch((e) =&gt; console.log(e))
+    .then((data) =&gt; console.log(data));</code></pre>
+<h2 id="总结与感想"><a href="#总结与感想" class="headerlink" title="总结与感想"></a>总结与感想</h2><p>本文看似篇幅略长，其实大部分内容是 <a target="_blank" rel="noopener" href="https://promisesaplus.com/#notes">Promise A+</a> 规范的 2.2.7 节，规范简直字字珠玑，膜拜。</p>
+<p><img src="https://pic3.zhimg.com/v2-92c6a4febebd1aa1fc024b29ebaf2f3e_b.jpg"></p>
+<p><img src="https://pic3.zhimg.com/80/v2-92c6a4febebd1aa1fc024b29ebaf2f3e_720w.jpg"></p>
+<h2 id="转载说明"><a href="#转载说明" class="headerlink" title="转载说明"></a>转载说明</h2><p>本文经由作者同意，转载自知乎用户<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/kan-a-79">徐鹏跃</a><br><a href="https://sm.ms/image/Xvb1CJr7QTI26ei" target="_blank"><img src="https://i.loli.net/2020/12/14/Xvb1CJr7QTI26ei.png" ></a></p>
 
             </div>
             <hr/>
@@ -485,7 +704,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://heyxiao.github.io/2020/11/07/%E8%BF%99%E4%B8%AABlog%E8%BF%98%E6%9C%89%E6%88%91/">https://heyxiao.github.io/2020/11/07/%E8%BF%99%E4%B8%AABlog%E8%BF%98%E6%9C%89%E6%88%91/</a>
+                    <a href="https://heyxiao.github.io/2020/12/14/Promise%20V8%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/">https://heyxiao.github.io/2020/12/14/Promise%20V8%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -523,12 +742,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E4%B8%AA%E4%BA%BA%E7%AE%80%E4%BB%8B/">
-                                    <span class="chip bg-color">个人简介</span>
+                                <a href="/tags/JavaScript/">
+                                    <span class="chip bg-color">JavaScript</span>
                                 </a>
                             
-                                <a href="/tags/%E5%8D%9A%E5%AE%A2%E7%AE%80%E4%BB%8B/">
-                                    <span class="chip bg-color">博客简介</span>
+                                <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                                    <span class="chip bg-color">转载</span>
                                 </a>
                             
                         </div>
@@ -570,46 +789,52 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/11/09/%E4%B8%80%E7%AF%87%E6%9D%A5%E8%87%AA2018%E5%B9%B44%E6%9C%8817%E6%97%A5%E7%9A%84Git%E7%AC%94%E8%AE%B0/">
+                <a href="/2020/12/14/Promise%20V8%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="一篇来自2018年4月17日的Git笔记">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Promise V8 源码分析(二)">
                         
-                        <span class="card-title">一篇来自2018年4月17日的Git笔记</span>
+                        <span class="card-title">Promise V8 源码分析(二)</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            一些比较常用的Git指令
+                            基于 node 版本 14.13.0，V8 版本 8.4.371。本文介绍的内容是 reject、catch 和 then 的链式调用。
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-11-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-12-14
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Git/" class="post-category">
-                                    Git
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    技术
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Git/">
-                        <span class="chip bg-color">Git</span>
+                    <a href="/tags/JavaScript/">
+                        <span class="chip bg-color">JavaScript</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">转载</span>
                     </a>
                     
                 </div>
@@ -623,31 +848,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/10/22/%E4%BD%BF%E7%94%A8CSDN-markdown%E7%BC%96%E8%BE%91%E5%99%A8/">
+                <a href="/2020/11/20/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3Promise%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%A8%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="这是我的第一篇博客">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="彻底理解Promise原理及全功能实现">
                         
-                        <span class="card-title">这是我的第一篇博客</span>
+                        <span class="card-title">彻底理解Promise原理及全功能实现</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。
+                            Promise 作为前端异步解决方案的出现，可以说是火遍全网，几乎所有的异步场景甚至框架都会有它的身影
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-10-22
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-11-20
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Markdown/" class="post-category">
-                                    Markdown
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    技术
                                 </a>
                             
                             
@@ -657,12 +882,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Typora/">
-                        <span class="chip bg-color">Typora</span>
+                    <a href="/tags/JavaScript/">
+                        <span class="chip bg-color">JavaScript</span>
                     </a>
                     
-                    <a href="/tags/Markdown/">
-                        <span class="chip bg-color">Markdown</span>
+                    <a href="/tags/%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">转载</span>
                     </a>
                     
                 </div>
