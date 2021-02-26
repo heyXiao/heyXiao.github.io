@@ -435,14 +435,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-02-25
+                    2021-02-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    168
+                    158
                 </div>
                 
 
@@ -456,23 +456,25 @@
             <div id="articleContent">
                 <h3 id="判定字符是否唯一-easy"><a href="#判定字符是否唯一-easy" class="headerlink" title="判定字符是否唯一 easy"></a>判定字符是否唯一 easy</h3><p>实现一个算法，确定一个字符串 s 的所有字符是否全都不同。</p>
 <p>示例 1：<br>输入: s = “leetcode”<br>输出: false<br>示例 2：<br>输入: s = “abc”<br>输出: true<br>限制：<br>0 &lt;= len(s) &lt;= 100<br>如果你不使用额外的数据结构，会很加分。</p>
-<pre><code>var isUnique = function (astr) &#123;
-  // 哈希表解法
-  if (!astr.length) return true;
-  let hash = &#123;&#125;;
-  for (let i = 0; i &lt; astr.length; i++) &#123;
-    // 如果 hash 中已有 则 false
-    if (hash[astr[i]]) &#123;
-      return false;
-    &#125; else &#123;
-    // 否则存储
-      hash[astr[i]] = true;
-    &#125;
-  &#125;
-  // 如果一直没 false
-  return true;
-&#125;;</code></pre>
-<p>果然很easy….趁着今天有点闲，再水一博。不过很快就要忙了。</p>
+<pre class=" language-javascript"><code class="language-javascript">
+<span class="token keyword">var</span> isUnique <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>astr<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 哈希表解法</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>astr<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> hash <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> astr<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 如果 hash 中已有 则 false</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>hash<span class="token punctuation">[</span>astr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 否则存储</span>
+      hash<span class="token punctuation">[</span>astr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">// 如果一直没 false</span>
+  <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>果然很 easy….趁着今天有点闲，再水一博。不过很快就要忙了。</p>
 
             </div>
             <hr/>
@@ -867,7 +869,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">13.3k</span>&nbsp;字
+                class="white-color">12.5k</span>&nbsp;字
             
             
             

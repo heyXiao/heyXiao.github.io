@@ -435,14 +435,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-11-13
+                    2021-02-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.7k
+                    2.5k
                 </div>
                 
 
@@ -465,44 +465,52 @@
 <p>如果 async 函数不需要 await 来调用，那 async 到底起个啥作用？</p>
 <h3 id="1-1-async-起什么作用"><a href="#1-1-async-起什么作用" class="headerlink" title="1.1. async 起什么作用"></a>1.1. async 起什么作用</h3><p>这个问题的关键在于，async 函数是怎么处理它的返回值的！</p>
 <p>我们当然希望它能直接通过 <code>return</code> 语句返回我们想要的值，但是如果真是这样，似乎就没 await 什么事了。所以，写段代码来试试，看它到底会返回什么：</p>
-<pre><code>async function testAsync() &#123;
-    return &quot;hello async&quot;;
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">testAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"hello async"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-const result = testAsync();
-console.log(result);</code></pre>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">testAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>看到输出就恍然大悟了——输出的是一个 Promise 对象。</p>
-<pre><code>c:\var\test&gt; node --harmony_async_await .
-Promise &#123; &#39;hello async&#39; &#125;</code></pre>
+<pre class=" language-javascript"><code class="language-javascript">
+    c<span class="token punctuation">:</span>\<span class="token keyword">var</span>\test<span class="token operator">></span> node <span class="token operator">--</span>harmony_async_await <span class="token punctuation">.</span>
+    Promise <span class="token punctuation">{</span> <span class="token string">'hello async'</span> <span class="token punctuation">}</span>
+</code></pre>
 <p>所以，async 函数返回的是一个 Promise 对象。从<a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function">文档</a>中也可以得到这个信息。async 函数（包含函数语句、函数表达式、Lambda 表达式）会返回一个 Promise 对象，如果在函数中 <code>return</code> 一个直接量，async 会把这个直接量通过 <code>Promise.resolve()</code> 封装成 Promise 对象。</p>
 <blockquote>
 <p>补充知识点 <em>[2020-06-04]</em></p>
 <p><code>Promise.resolve(x)</code> 可以看作是 <code>new Promise(resolve =&gt; resolve(x))</code> 的简写，可以用于快速封装字面量对象或其他对象，将其封装成 Promise 实例。</p>
 </blockquote>
 <p>async 函数返回的是一个 Promise 对象，所以在最外层不能用 await 获取其返回值的情况下，我们当然应该用原来的方式：<code>then()</code> 链来处理这个 Promise 对象，就像这样</p>
-<pre><code>testAsync().then(v =&gt; &#123;
-    console.log(v);    // 输出 hello async
-&#125;);</code></pre>
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token function">testAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>v <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">// 输出 hello async</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>现在回过头来想下，如果 async 函数没有返回值，又该如何？很容易想到，它会返回 <code>Promise.resolve(undefined)</code>。</p>
 <p>联想一下 Promise 的特点——无等待，所以在没有 <code>await</code> 的情况下执行 async 函数，它会立即执行，返回一个 Promise 对象，并且，绝不会阻塞后面的语句。这和普通返回 Promise 对象的函数并无二致。</p>
 <p>那么下一个关键点就在于 await 关键字了。</p>
 <h3 id="1-2-await-到底在等啥"><a href="#1-2-await-到底在等啥" class="headerlink" title="1.2. await 到底在等啥"></a>1.2. await 到底在等啥</h3><p>一般来说，都认为 await 是在等待一个 async 函数完成。不过按<a target="_blank" rel="noopener" href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/await">语法说明</a>，await 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值（换句话说，就是没有特殊限定）。</p>
 <p>因为 async 函数返回一个 Promise 对象，所以 await 可以用于等待一个 async 函数的返回值——这也可以说是 await 在等 async 函数，但要清楚，它等的实际是一个返回值。注意到 await 不仅仅用于等 Promise 对象，它可以等任意表达式的结果，所以，await 后面实际是可以接普通函数调用或者直接量的。所以下面这个示例完全可以正确运行</p>
-<pre><code>function getSomething() &#123;
-    return &quot;something&quot;;
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">getSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"something"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-async function testAsync() &#123;
-    return Promise.resolve(&quot;hello async&quot;);
-&#125;
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">testAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">"hello async"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-async function test() &#123;
-    const v1 = await getSomething();
-    const v2 = await testAsync();
-    console.log(v1, v2);
-&#125;
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> v1 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> v2 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">testAsync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>v1<span class="token punctuation">,</span> v2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-test();</code></pre>
+    <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <h3 id="1-3-await-等到了要等的，然后呢"><a href="#1-3-await-等到了要等的，然后呢" class="headerlink" title="1.3. await 等到了要等的，然后呢"></a>1.3. await 等到了要等的，然后呢</h3><p>await 等到了它要等的东西，一个 Promise 对象，或者其它值，然后呢？我不得不先说，<code>await</code> 是个运算符，用于组成表达式，await 表达式的运算结果取决于它等的东西。</p>
 <p>如果它等到的不是一个 Promise 对象，那 await 表达式的运算结果就是它等到的东西。</p>
 <p>如果它等到的是一个 Promise 对象，await 就忙起来了，它会阻塞后面的代码，等着 Promise 对象 resolve，然后得到 resolve 的值，作为 await 表达式的运算结果。</p>
@@ -511,147 +519,163 @@ test();</code></pre>
 </blockquote>
 <h2 id="2-async-await-帮我们干了啥"><a href="#2-async-await-帮我们干了啥" class="headerlink" title="2. async/await 帮我们干了啥"></a>2. async/await 帮我们干了啥</h2><h3 id="2-1-作个简单的比较"><a href="#2-1-作个简单的比较" class="headerlink" title="2.1. 作个简单的比较"></a>2.1. 作个简单的比较</h3><p>上面已经说明了 async 会将其后的函数（函数表达式或 Lambda）的返回值封装成一个 Promise 对象，而 await 会等待这个 Promise 完成，并将其 resolve 的结果返回出来。</p>
 <p>现在举例，用 <code>setTimeout</code> 模拟耗时的异步操作，先来看看不用 async/await 会怎么写</p>
-<pre><code>function takeLongTime() &#123;
-    return new Promise(resolve =&gt; &#123;
-        setTimeout(() =&gt; resolve(&quot;long_time_value&quot;), 1000);
-    &#125;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span>resolve <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">"long_time_value"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-takeLongTime().then(v =&gt; &#123;
-    console.log(&quot;got&quot;, v);
-&#125;);</code></pre>
+    <span class="token function">takeLongTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>v <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"got"</span><span class="token punctuation">,</span> v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>如果改用 async/await 呢，会是这样</p>
-<pre><code>function takeLongTime() &#123;
-    return new Promise(resolve =&gt; &#123;
-        setTimeout(() =&gt; resolve(&quot;long_time_value&quot;), 1000);
-    &#125;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span>resolve <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">"long_time_value"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-async function test() &#123;
-    const v = await takeLongTime();
-    console.log(v);
-&#125;
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> v <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-test();</code></pre>
+    <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>眼尖的同学已经发现 <code>takeLongTime()</code> 没有申明为 <code>async</code>。实际上，<code>takeLongTime()</code> 本身就是返回的 Promise 对象，加不加 <code>async</code> 结果都一样，如果没明白，请回过头再去看看上面的“async 起什么作用”。</p>
 <p>又一个疑问产生了，这两段代码，两种方式对异步调用的处理（实际就是对 Promise 对象的处理）差别并不明显，甚至使用 async/await 还需要多写一些代码，那它的优势到底在哪？</p>
 <h3 id="2-2-async-await-的优势在于处理-then-链"><a href="#2-2-async-await-的优势在于处理-then-链" class="headerlink" title="2.2. async/await 的优势在于处理 then 链"></a>2.2. async/await 的优势在于处理 then 链</h3><p>单一的 Promise 链并不能发现 async/await 的优势，但是，如果需要处理由多个 Promise 组成的 then 链的时候，优势就能体现出来了（很有意思，Promise 通过 then 链来解决多层回调的问题，现在又用 async/await 来进一步优化它）。</p>
 <p>假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。我们仍然用 <code>setTimeout</code> 来模拟异步操作：</p>
-<pre><code>/**
- * 传入参数 n，表示这个函数执行的时间（毫秒）
- * 执行的结果是 n + 200，这个值将用于下一步骤
- */
-function takeLongTime(n) &#123;
-    return new Promise(resolve =&gt; &#123;
-        setTimeout(() =&gt; resolve(n + 200), n);
-    &#125;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token comment" spellcheck="true">/**
+     * 传入参数 n，表示这个函数执行的时间（毫秒）
+     * 执行的结果是 n + 200，这个值将用于下一步骤
+     */</span>
+    <span class="token keyword">function</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span>resolve <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">resolve</span><span class="token punctuation">(</span>n <span class="token operator">+</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-function step1(n) &#123;
-    console.log(`step1 with $&#123;n&#125;`);
-    return takeLongTime(n);
-&#125;
+    <span class="token keyword">function</span> <span class="token function">step1</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step1 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-function step2(n) &#123;
-    console.log(`step2 with $&#123;n&#125;`);
-    return takeLongTime(n);
-&#125;
+    <span class="token keyword">function</span> <span class="token function">step2</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step2 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-function step3(n) &#123;
-    console.log(`step3 with $&#123;n&#125;`);
-    return takeLongTime(n);
-&#125;</code></pre>
+    <span class="token keyword">function</span> <span class="token function">step3</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step3 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>现在用 Promise 方式来实现这三个步骤的处理</p>
-<pre><code>function doIt() &#123;
-    console.time(&quot;doIt&quot;);
-    const time1 = 300;
-    step1(time1)
-        .then(time2 =&gt; step2(time2))
-        .then(time3 =&gt; step3(time3))
-        .then(result =&gt; &#123;
-            console.log(`result is $&#123;result&#125;`);
-            console.timeEnd(&quot;doIt&quot;);
-        &#125;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time1 <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">;</span>
+        <span class="token function">step1</span><span class="token punctuation">(</span>time1<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>time2 <span class="token operator">=</span><span class="token operator">></span> <span class="token function">step2</span><span class="token punctuation">(</span>time2<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>time3 <span class="token operator">=</span><span class="token operator">></span> <span class="token function">step3</span><span class="token punctuation">(</span>time3<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>result <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+                console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`result is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                console<span class="token punctuation">.</span><span class="token function">timeEnd</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-doIt();
+    <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// c:\var\test&gt;node --harmony_async_await .
-// step1 with 300
-// step2 with 500
-// step3 with 700
-// result is 900
-// doIt: 1507.251ms</code></pre>
+    <span class="token comment" spellcheck="true">// c:\var\test>node --harmony_async_await .</span>
+    <span class="token comment" spellcheck="true">// step1 with 300</span>
+    <span class="token comment" spellcheck="true">// step2 with 500</span>
+    <span class="token comment" spellcheck="true">// step3 with 700</span>
+    <span class="token comment" spellcheck="true">// result is 900</span>
+    <span class="token comment" spellcheck="true">// doIt: 1507.251ms</span>
+</code></pre>
 <p>输出结果 <code>result</code> 是 <code>step3()</code> 的参数 <code>700 + 200</code> = <code>900</code>。<code>doIt()</code> 顺序执行了三个步骤，一共用了 <code>300 + 500 + 700 = 1500</code> 毫秒，和 <code>console.time()/console.timeEnd()</code> 计算的结果一致。</p>
 <p>如果用 async/await 来实现呢，会是这样</p>
-<pre><code>async function doIt() &#123;
-    console.time(&quot;doIt&quot;);
-    const time1 = 300;
-    const time2 = await step1(time1);
-    const time3 = await step2(time2);
-    const result = await step3(time3);
-    console.log(`result is $&#123;result&#125;`);
-    console.timeEnd(&quot;doIt&quot;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time1 <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time2 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step1</span><span class="token punctuation">(</span>time1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time3 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step2</span><span class="token punctuation">(</span>time2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step3</span><span class="token punctuation">(</span>time3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`result is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">timeEnd</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-doIt();</code></pre>
+    <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>结果和之前的 Promise 实现是一样的，但是这个代码看起来是不是清晰得多，几乎跟同步代码一样</p>
 <h3 id="2-3-还有更酷的"><a href="#2-3-还有更酷的" class="headerlink" title="2.3. 还有更酷的"></a>2.3. 还有更酷的</h3><p>现在把业务要求改一下，仍然是三个步骤，但每一个步骤都需要之前每个步骤的结果。</p>
-<pre><code>function step1(n) &#123;
-    console.log(`step1 with $&#123;n&#125;`);
-    return takeLongTime(n);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">step1</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step1 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-function step2(m, n) &#123;
-    console.log(`step2 with $&#123;m&#125; and $&#123;n&#125;`);
-    return takeLongTime(m + n);
-&#125;
+    <span class="token keyword">function</span> <span class="token function">step2</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step2 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>m<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> and </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>m <span class="token operator">+</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-function step3(k, m, n) &#123;
-    console.log(`step3 with $&#123;k&#125;, $&#123;m&#125; and $&#123;n&#125;`);
-    return takeLongTime(k + m + n);
-&#125;</code></pre>
+    <span class="token keyword">function</span> <span class="token function">step3</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> m<span class="token punctuation">,</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`step3 with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>k<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>m<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> and </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token function">takeLongTime</span><span class="token punctuation">(</span>k <span class="token operator">+</span> m <span class="token operator">+</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre>
 <p>这回先用 async/await 来写：</p>
-<pre><code>async function doIt() &#123;
-    console.time(&quot;doIt&quot;);
-    const time1 = 300;
-    const time2 = await step1(time1);
-    const time3 = await step2(time1, time2);
-    const result = await step3(time1, time2, time3);
-    console.log(`result is $&#123;result&#125;`);
-    console.timeEnd(&quot;doIt&quot;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time1 <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time2 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step1</span><span class="token punctuation">(</span>time1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time3 <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step2</span><span class="token punctuation">(</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">step3</span><span class="token punctuation">(</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">,</span> time3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`result is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        console<span class="token punctuation">.</span><span class="token function">timeEnd</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-doIt();
+    <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-// c:\var\test&gt;node --harmony_async_await .
-// step1 with 300
-// step2 with 800 = 300 + 500
-// step3 with 1800 = 300 + 500 + 1000
-// result is 2000
-// doIt: 2907.387ms</code></pre>
+    <span class="token comment" spellcheck="true">// c:\var\test>node --harmony_async_await .</span>
+    <span class="token comment" spellcheck="true">// step1 with 300</span>
+    <span class="token comment" spellcheck="true">// step2 with 800 = 300 + 500</span>
+    <span class="token comment" spellcheck="true">// step3 with 1800 = 300 + 500 + 1000</span>
+    <span class="token comment" spellcheck="true">// result is 2000</span>
+    <span class="token comment" spellcheck="true">// doIt: 2907.387ms</span>
+</code></pre>
 <p>除了觉得执行时间变长了之外，似乎和之前的示例没啥区别啊！别急，认真想想如果把它写成 Promise 方式实现会是什么样子？</p>
-<pre><code>function doIt() &#123;
-    console.time(&quot;doIt&quot;);
-    const time1 = 300;
-    step1(time1)
-        .then(time2 =&gt; &#123;
-            return step2(time1, time2)
-                .then(time3 =&gt; [time1, time2, time3]);
-        &#125;)
-        .then(times =&gt; &#123;
-            const [time1, time2, time3] = times;
-            return step3(time1, time2, time3);
-        &#125;)
-        .then(result =&gt; &#123;
-            console.log(`result is $&#123;result&#125;`);
-            console.timeEnd(&quot;doIt&quot;);
-        &#125;);
-&#125;
+<pre class=" language-javascript"><code class="language-javascript">
+    <span class="token keyword">function</span> <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> time1 <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">;</span>
+        <span class="token function">step1</span><span class="token punctuation">(</span>time1<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>time2 <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token function">step2</span><span class="token punctuation">(</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>time3 <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">,</span> time3<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>times <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+                <span class="token keyword">const</span> <span class="token punctuation">[</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">,</span> time3<span class="token punctuation">]</span> <span class="token operator">=</span> times<span class="token punctuation">;</span>
+                <span class="token keyword">return</span> <span class="token function">step3</span><span class="token punctuation">(</span>time1<span class="token punctuation">,</span> time2<span class="token punctuation">,</span> time3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>result <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+                console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`result is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>result<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                console<span class="token punctuation">.</span><span class="token function">timeEnd</span><span class="token punctuation">(</span><span class="token string">"doIt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-doIt();</code></pre>
+    <span class="token function">doIt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <p>有没有感觉有点复杂的样子？那一堆参数处理，就是 Promise 方案的死穴—— 参数传递太麻烦了，看着就晕！</p>
-<h2 id="3-洗洗睡吧"><a href="#3-洗洗睡吧" class="headerlink" title="3. 洗洗睡吧"></a>3. 洗洗睡吧</h2><p>就目前来说，已经理解 async/await 了吧？但其实还有一些事情没提及——Promise 有可能 reject 啊，怎么处理呢？如果需要并行处理3个步骤，再等待所有结果，又该怎么处理呢？</p>
+<h2 id="3-洗洗睡吧"><a href="#3-洗洗睡吧" class="headerlink" title="3. 洗洗睡吧"></a>3. 洗洗睡吧</h2><p>就目前来说，已经理解 async/await 了吧？但其实还有一些事情没提及——Promise 有可能 reject 啊，怎么处理呢？如果需要并行处理 3 个步骤，再等待所有结果，又该怎么处理呢？</p>
 <p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/05/async.html">阮一峰老师已经说过了</a>，我就懒得说了。</p>
 <h2 id="4-推荐相关文章"><a href="#4-推荐相关文章" class="headerlink" title="4. 推荐相关文章"></a>4. 推荐相关文章</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021966277">在微信小程序中使用 async/await</a> 2020-03-10</li>
@@ -1051,7 +1075,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">13.3k</span>&nbsp;字
+                class="white-color">12.5k</span>&nbsp;字
             
             
             
