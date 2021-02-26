@@ -8,6 +8,7 @@ tags:
   - JavaScript
   - 转载
 ---
+
 # [理解 JavaScript 的 async/await]()
 
 JavaScript 中的 async/await 是 [AsyncFunction 特性](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction) 中的关键字。目前为止，除了 IE 之外，常用浏览器和 Node (v7.6+) 都已经支持该特性。具体支持情况可以在 [这里](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncFunction#Browser_compatibility) 查看。
@@ -36,17 +37,25 @@ JavaScript 中的 async/await 是 [AsyncFunction 特性](https://developer.mozil
 
 我们当然希望它能直接通过 `return` 语句返回我们想要的值，但是如果真是这样，似乎就没 await 什么事了。所以，写段代码来试试，看它到底会返回什么：
 
+```javascript
+{% raw %}
     async function testAsync() {
         return "hello async";
     }
 
     const result = testAsync();
     console.log(result);
+{% endraw %}
+```
 
 看到输出就恍然大悟了——输出的是一个 Promise 对象。
 
+```javascript
+{% raw %}
     c:\var\test> node --harmony_async_await .
     Promise { 'hello async' }
+{% endraw %}
+```
 
 所以，async 函数返回的是一个 Promise 对象。从[文档](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/async_function)中也可以得到这个信息。async 函数（包含函数语句、函数表达式、Lambda 表达式）会返回一个 Promise 对象，如果在函数中 `return` 一个直接量，async 会把这个直接量通过 `Promise.resolve()` 封装成 Promise 对象。
 
@@ -56,9 +65,13 @@ JavaScript 中的 async/await 是 [AsyncFunction 特性](https://developer.mozil
 
 async 函数返回的是一个 Promise 对象，所以在最外层不能用 await 获取其返回值的情况下，我们当然应该用原来的方式：`then()` 链来处理这个 Promise 对象，就像这样
 
+```javascript
+{% raw %}
     testAsync().then(v => {
         console.log(v);    // 输出 hello async
     });
+{% endraw %}
+```
 
 现在回过头来想下，如果 async 函数没有返回值，又该如何？很容易想到，它会返回 `Promise.resolve(undefined)`。
 
@@ -72,6 +85,8 @@ async 函数返回的是一个 Promise 对象，所以在最外层不能用 awai
 
 因为 async 函数返回一个 Promise 对象，所以 await 可以用于等待一个 async 函数的返回值——这也可以说是 await 在等 async 函数，但要清楚，它等的实际是一个返回值。注意到 await 不仅仅用于等 Promise 对象，它可以等任意表达式的结果，所以，await 后面实际是可以接普通函数调用或者直接量的。所以下面这个示例完全可以正确运行
 
+```javascript
+{% raw %}
     function getSomething() {
         return "something";
     }
@@ -87,6 +102,8 @@ async 函数返回的是一个 Promise 对象，所以在最外层不能用 awai
     }
 
     test();
+{% endraw %}
+```
 
 ### 1.3. await 等到了要等的，然后呢
 
@@ -106,6 +123,8 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
 
 现在举例，用 `setTimeout` 模拟耗时的异步操作，先来看看不用 async/await 会怎么写
 
+```javascript
+{% raw %}
     function takeLongTime() {
         return new Promise(resolve => {
             setTimeout(() => resolve("long_time_value"), 1000);
@@ -115,9 +134,13 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     takeLongTime().then(v => {
         console.log("got", v);
     });
+{% endraw %}
+```
 
 如果改用 async/await 呢，会是这样
 
+```javascript
+{% raw %}
     function takeLongTime() {
         return new Promise(resolve => {
             setTimeout(() => resolve("long_time_value"), 1000);
@@ -130,6 +153,8 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     }
 
     test();
+{% endraw %}
+```
 
 眼尖的同学已经发现 `takeLongTime()` 没有申明为 `async`。实际上，`takeLongTime()` 本身就是返回的 Promise 对象，加不加 `async` 结果都一样，如果没明白，请回过头再去看看上面的“async 起什么作用”。
 
@@ -141,6 +166,8 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
 
 假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。我们仍然用 `setTimeout` 来模拟异步操作：
 
+```javascript
+{% raw %}
     /**
      * 传入参数 n，表示这个函数执行的时间（毫秒）
      * 执行的结果是 n + 200，这个值将用于下一步骤
@@ -165,9 +192,13 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
         console.log(`step3 with ${n}`);
         return takeLongTime(n);
     }
+{% endraw %}
+```
 
 现在用 Promise 方式来实现这三个步骤的处理
 
+```javascript
+{% raw %}
     function doIt() {
         console.time("doIt");
         const time1 = 300;
@@ -188,11 +219,15 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     // step3 with 700
     // result is 900
     // doIt: 1507.251ms
+{% endraw %}
+```
 
 输出结果 `result` 是 `step3()` 的参数 `700 + 200` = `900`。`doIt()` 顺序执行了三个步骤，一共用了 `300 + 500 + 700 = 1500` 毫秒，和 `console.time()/console.timeEnd()` 计算的结果一致。
 
 如果用 async/await 来实现呢，会是这样
 
+```javascript
+{% raw %}
     async function doIt() {
         console.time("doIt");
         const time1 = 300;
@@ -204,6 +239,8 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     }
 
     doIt();
+{% endraw %}
+```
 
 结果和之前的 Promise 实现是一样的，但是这个代码看起来是不是清晰得多，几乎跟同步代码一样
 
@@ -211,6 +248,8 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
 
 现在把业务要求改一下，仍然是三个步骤，但每一个步骤都需要之前每个步骤的结果。
 
+```javascript
+{% raw %}
     function step1(n) {
         console.log(`step1 with ${n}`);
         return takeLongTime(n);
@@ -225,9 +264,13 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
         console.log(`step3 with ${k}, ${m} and ${n}`);
         return takeLongTime(k + m + n);
     }
+{% endraw %}
+```
 
 这回先用 async/await 来写：
 
+```javascript
+{% raw %}
     async function doIt() {
         console.time("doIt");
         const time1 = 300;
@@ -246,9 +289,13 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     // step3 with 1800 = 300 + 500 + 1000
     // result is 2000
     // doIt: 2907.387ms
+{% endraw %}
+```
 
 除了觉得执行时间变长了之外，似乎和之前的示例没啥区别啊！别急，认真想想如果把它写成 Promise 方式实现会是什么样子？
 
+```javascript
+{% raw %}
     function doIt() {
         console.time("doIt");
         const time1 = 300;
@@ -268,12 +315,14 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
     }
 
     doIt();
+{% endraw %}
+```
 
 有没有感觉有点复杂的样子？那一堆参数处理，就是 Promise 方案的死穴—— 参数传递太麻烦了，看着就晕！
 
 ## 3\. 洗洗睡吧
 
-就目前来说，已经理解 async/await 了吧？但其实还有一些事情没提及——Promise 有可能 reject 啊，怎么处理呢？如果需要并行处理3个步骤，再等待所有结果，又该怎么处理呢？
+就目前来说，已经理解 async/await 了吧？但其实还有一些事情没提及——Promise 有可能 reject 啊，怎么处理呢？如果需要并行处理 3 个步骤，再等待所有结果，又该怎么处理呢？
 
 [阮一峰老师已经说过了](http://www.ruanyifeng.com/blog/2015/05/async.html)，我就懒得说了。
 
@@ -290,4 +339,3 @@ await 等到了它要等的东西，一个 Promise 对象，或者其它值，�
 ## 5\. 关于转载
 
 转载自[思否](https://segmentfault.com/a/1190000007535316) 作者[边城](https://segmentfault.com/u/jamesfancy)
-

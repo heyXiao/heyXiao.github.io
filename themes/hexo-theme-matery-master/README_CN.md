@@ -292,7 +292,6 @@ prism_plugin:
   line_number: false    # default false
   custom_css:
 ```
-
 ### 搜索
 
 本主题中还使用到了 [hexo-generator-search](https://github.com/wzpan/hexo-generator-search) 的 Hexo 插件来做内容搜索，安装命令如下：

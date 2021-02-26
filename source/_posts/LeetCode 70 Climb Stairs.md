@@ -13,7 +13,10 @@ tags:
 
 ## 代码
 
-### [LeetCode 70](https://leetcode.com/problems/climbing-stairs/) ###
+### [LeetCode 70](https://leetcode.com/problems/climbing-stairs/)
+
+```javascript
+{% raw %}
     var climbStairs = function(n) {
     	if (n >= 1 && n <= 3) {
     		return n
@@ -40,3 +43,5 @@ tags:
     	return (fibn / sqrt5);
     }
     climbStairs(10)
+{% endraw %}
+```

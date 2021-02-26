@@ -24,21 +24,25 @@ tags:
 0 <= len(s) <= 100
 如果你不使用额外的数据结构，会很加分。
 
-    var isUnique = function (astr) {
-      // 哈希表解法
-      if (!astr.length) return true;
-      let hash = {};
-      for (let i = 0; i < astr.length; i++) {
-        // 如果 hash 中已有 则 false
-        if (hash[astr[i]]) {
-          return false;
-        } else {
-        // 否则存储
-          hash[astr[i]] = true;
-        }
-      }
-      // 如果一直没 false
-      return true;
-    };
+```javascript
+{% raw %}
+var isUnique = function (astr) {
+  // 哈希表解法
+  if (!astr.length) return true;
+  let hash = {};
+  for (let i = 0; i < astr.length; i++) {
+    // 如果 hash 中已有 则 false
+    if (hash[astr[i]]) {
+      return false;
+    } else {
+      // 否则存储
+      hash[astr[i]] = true;
+    }
+  }
+  // 如果一直没 false
+  return true;
+};
+{% endraw %}
+```
 
-果然很easy....趁着今天有点闲，再水一博。不过很快就要忙了。
+果然很 easy....趁着今天有点闲，再水一博。不过很快就要忙了。

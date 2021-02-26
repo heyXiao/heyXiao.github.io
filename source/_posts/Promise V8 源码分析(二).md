@@ -14,6 +14,8 @@ tags:
 
 ## reject
 
+```javascript
+{% raw %}
     new Promise((resolve, reject) => {
       setTimeout(_ => reject('rejected'), 5000)
     }).then(_ => {
@@ -21,9 +23,13 @@ tags:
     }, reason => {
       console.log(reason)
     })
+{% endraw %}
+```
 
 上述代码 5s 后执行 reject 函数，控制台打印 rejected。reject 函数调用了 V8 的 [RejectPromise](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#210) 函数，源码如下：
 
+```javascript
+{% raw %}
     transitioning builtin
     RejectPromise(implicit context: Context)(
         promise: JSPromise, reason: JSAny, debugEvent: Boolean): JSAny {
@@ -37,9 +43,13 @@ tags:
       TriggerPromiseReactions(reactions, reason, kPromiseReactionReject);
       return Undefined;
     }
+{% endraw %}
+```
 
 [TriggerPromiseReactions](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#140) 函数在上一篇文章分析过，功能是将 Promise 处理函数相关的 PromiseReaction 链表，反转后依次插入 V8 的 microtask 队列，TriggerPromiseReactions 源码继续删减如下：
 
+```javascript
+{% raw %}
     // https://tc39.es/ecma262/#sec-triggerpromisereactions
     transitioning macro TriggerPromiseReactions(implicit context: Context)(
         reactions: Zero|PromiseReaction, argument: JSAny,
@@ -61,11 +71,15 @@ tags:
         }
       }
     }
+{% endraw %}
+```
 
 [MorphAndEnqueuePromiseReaction](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-abstract-operations.tq#84) 将 PromiseReaction 转为 microtask，最终插入 microtask 队列，morph 本身有转变/转化的意思，比如 Polymorphism (多态)。
 
 MorphAndEnqueuePromiseReaction 接收 3 个参数，PromiseReaction 是前面提到的包装了 Promise 处理函数的链表对象，argument 是 resolve/reject 的参数，reactionType 表示 Promise 最终的状态，fulfilled 状态对应的值是 kPromiseReactionFulfill，rejected 状态对应的值是 kPromiseReactionReject。MorphAndEnqueuePromiseReaction 的逻辑很简单，因为此时已经知道了 Promise 的最终状态，所以可以从 promiseReaction 对象得到 promiseReactionJobTask 对象，promiseReactionJobTask 的变量命名与 ECMA 规范相关描述一脉相承，其实就是传说中的 microtask。MorphAndEnqueuePromiseReaction 源码如下，仅保留了和本小节相关的内容。
 
+```javascript
+{% raw %}
     transitioning macro MorphAndEnqueuePromiseReaction(implicit context: Context)(
         promiseReaction: PromiseReaction, argument: JSAny,
         reactionType: constexpr PromiseReactionType): void {
@@ -97,6 +111,8 @@ MorphAndEnqueuePromiseReaction 接收 3 个参数，PromiseReaction 是前面提
         EnqueueMicrotask(handlerContext, promiseReactionJobTask);
       }
     }
+{% endraw %}
+```
 
 reject 和 resolve 的逻辑基本相同，分为 3 步：
 
@@ -106,14 +122,20 @@ reject 和 resolve 的逻辑基本相同，分为 3 步：
 
 ## catch
 
+```javascript
+{% raw %}
     new Promise((resolve, reject) => {
         setTimeout(reject, 2000)
     }).catch(_ => {
         console.log('rejected')
     })
+{% endraw %}
+```
 
 以上面代码为例，当 catch 方法执行时，调用了 V8 的 [PromisePrototypeCatch](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-constructor.tq#100) 方法，源码如下：
 
+```javascript
+{% raw %}
     transitioning javascript builtin
     PromisePrototypeCatch(
         js-implicit context: Context, receiver: JSAny)(onRejected: JSAny): JSAny {
@@ -121,9 +143,13 @@ reject 和 resolve 的逻辑基本相同，分为 3 步：
       return UnsafeCast<JSAny>(
           InvokeThen(nativeContext, receiver, Undefined, onRejected));
     }
+{% endraw %}
+```
 
 PromisePrototypeCatch 的源码确实只有就这几行，除了调用 InvokeThen 方法再无其它 。从名字可以推测出，InvokeThen 调用的是 Promise 的 then 方法，[InvokeThen](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-misc.tq#199) 源码如下：
 
+```javascript
+{% raw %}
     transitioning
     macro InvokeThen<F: type>(implicit context: Context)(
         nativeContext: NativeContext, receiver: JSAny, arg1: JSAny, arg2: JSAny,
@@ -142,11 +168,15 @@ PromisePrototypeCatch 的源码确实只有就这几行，除了调用 InvokeThe
           return callFunctor.Call(nativeContext, then, receiver, arg1, arg2);
         }
     }
+{% endraw %}
+```
 
 InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本小节的 JS 示例代码走的是 if 分支。先是拿到 V8 原生的 then 方法，然后通过 callFunctor.Call(nativeContext, then, receiver, arg1, arg2) 调用 then 方法。then 方法上一篇文章有提及，这里不再赘述。
 
 既然 catch 方法底层调用了 then 方法，那么 catch 方法也有和 then 方法一样的返回值，catch 方法可以继续抛出异常，可以继续链式调用。
 
+```javascript
+{% raw %}
     new Promise((resolve, reject) => {
         setTimeout(reject, 2000)
     }).catch(_ => {
@@ -154,6 +184,8 @@ InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本
     }).catch(_ => {
         console.log('last catch')
     })
+{% endraw %}
+```
 
 上面的代码第 2 个 catch 捕获第 1 个 catch 抛出的异常，最后打印 last catch。
 
@@ -162,6 +194,8 @@ InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本
 
 ## then 的链式调用与 microtask 队列
 
+```javascript
+{% raw %}
     Promise.resolve('123')
         .then(() => {throw new Error('456')})
         .then(_ => {
@@ -169,9 +203,13 @@ InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本
         })
         .catch((e) => console.log(e))
         .then((data) => console.log(data));
+{% endraw %}
+```
 
 以上代码运行后，打印 Error: 456 和 undefined。为了便于叙述，将 then 的链式调用写法改为啰嗦写法。
 
+```javascript
+{% raw %}
     const p0 = Promise.resolve('123')
     const p1 = p0.then(() => {throw new Error('456')})
     const p2 = p1.then(_ => {
@@ -179,12 +217,18 @@ InvokeThen 方法有 if/else 两个分支，两个分支的逻辑差不多，本
     })
     const p3 = p2.catch((e) => console.log(e))
     const p4 = p3.then((data) => console.log(data));
+{% endraw %}
+```
 
 then 方法返回新的 Promise，所以 p0、p1、p2、p3 和 p4 这 5 个 Promise 互不相等。
 
 p0 开始便处于 fulfilled 状态，当执行
 
+```javascript
+{% raw %}
     const p1 = p0.then(() => {throw new Error('456')})
+{% endraw %}
+```
 
 时，由于 p0 已是 fulfilled 状态，直接将 p0 的 fulfilled 处理函数插入 microtask 队列，此时 microtask 队列简略示意图如下，绿色区域表示 microtask，蓝色区域表示 microtask 队列。
 
@@ -194,12 +238,16 @@ p0 开始便处于 fulfilled 状态，当执行
 
 跑完余下所有的代码。
 
+```javascript
+{% raw %}
     const p1 = p0.then(() => {throw new Error('456')})
     const p2 = p1.then(_ => {
         console.log('shouldnot be here')
     })
     const p3 = p2.catch((e) => console.log(e))
     const p4 = p3.then((data) => console.log(data));
+{% endraw %}
+```
 
 p1、p2、p3 和 p4 这 4 个 Promise 都处于 pending 状态，microtask 队列还是
 
@@ -211,6 +259,8 @@ p1、p2、p3 和 p4 这 4 个 Promise 都处于 pending 状态，microtask 队�
 
 在执行 microtask 的过程中，MicrotaskQueueBuiltinsAssembler::RunSingleMicrotask 会调用 [PromiseReactionJob](https://chromium.googlesource.com/v8/v8.git/+/refs/heads/8.4-lkgr/src/builtins/promise-reaction-job.tq#43)，源码如下：
 
+```javascript
+{% raw %}
     transitioning
     macro PromiseReactionJob(
         context: Context, argument: JSAny, handler: Callable|Undefined,
@@ -242,6 +292,8 @@ p1、p2、p3 和 p4 这 4 个 Promise 都处于 pending 状态，microtask 队�
         }
       }
     }
+{% endraw %}
+```
 
 PromiseReactionJob 接收的参数和 microtask 密切相关，当下 argument 参数是 '123'，handler 是函数 () => {throw new Error('456')}，promiseOrCapability 是 p1，reactionType 是 kPromiseReactionFulfill。
 
@@ -277,6 +329,8 @@ handler 为 undefined 的原因是 p1 的最终状态是 rejected，但却没有
 
 回头再看这段代码，catch 在这里的作用相当于是把一个 rejected 状态的 Promise 链路，恢复成 fulfilled 状态，使后面的处理函数 (data)=> console.log(data) 得到执行的机会。
 
+```javascript
+{% raw %}
     // 链式调用，每一级接收上一级的 argument 和状态(fulfilled/rejected)
     // 调用本级的 handler，将本级的 argument 和状态传给下一级
     // 有点类似数组的 reduce 方法
@@ -289,6 +343,8 @@ handler 为 undefined 的原因是 p1 的最终状态是 rejected，但却没有
         // 恢复成 fulfilled 状态
         .catch((e) => console.log(e))
         .then((data) => console.log(data));
+{% endraw %}
+```
 
 ## 总结与感想
 

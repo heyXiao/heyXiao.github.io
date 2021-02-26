@@ -22,14 +22,20 @@ tags:
 
 **Promise**的设定是一个不可逆的状态机，包含：
 
+```javascript
+{% raw %}
     const PENDDING = "PENDDING"; // 初始化pendding状态
     const RESOLVED = "RESOLVED"; // 正确完成resolve状态
     const REJECTED = "REJECTED"; // 错误完成reject状态
+{% endraw %}
+```
 
 ### MyPromise
 
 创建**MyPromise**类函数和初始化相对应的值和状态
 
+```javascript
+{% raw %}
     class MyPromise {
       constructor(executor) {
         // 初始化状态status
@@ -72,17 +78,21 @@ tags:
         };
 
         try{
-        	executor(resolve,reject)
+          executor(resolve,reject)
         }catch(e){
-        	reject(e)
+          reject(e)
         }
       }
     }
+{% endraw %}
+```
 
 ### MyPromise.then
 
 #### 同步和异步
 
+```javascript
+{% raw %}
     class MyPromise {
       // ...
       then(resolve, reject) {
@@ -131,11 +141,15 @@ tags:
 
     // 打印结果
     // promise async
+{% endraw %}
+```
 
 #### Promise A+规范场景
 
 > 根据 Promise A+ 规范，then 方法会返回一个 promise，从而支持向下链式调用。同时可以根据上一个 then 的返回值，透传给下一个 then 方法。
 
+```javascript
+{% raw %}
     // Promise A+
     const promise = new Promise((resolve, reject) => {
       resolve("first");
@@ -186,11 +200,15 @@ tags:
     // 打印结果
     // first
     // first
+{% endraw %}
+```
 
 #### 实现 then
 
 根据以上规范定义，我们来改造一下**then**方法：
 
+```javascript
+{% raw %}
     class MyPromise {
       // ...
       then(resolve, reject) {
@@ -278,6 +296,8 @@ tags:
     // first
     // promise second
     // third
+{% endraw %}
+```
 
 #### 小结
 
@@ -289,6 +309,8 @@ tags:
 
 #### Promise A+规范场景
 
+```javascript
+{% raw %}
     // Promise A+
     const promise = new Promise((resolve, reject) => {
       reject("promise reject");
@@ -300,9 +322,13 @@ tags:
 
     // 打印结果
     // promise reject
+{% endraw %}
+```
 
 #### 实现 catch
 
+```javascript
+{% raw %}
     class MyPromise {
       // ...
       catch(errorFn) {
@@ -323,6 +349,8 @@ tags:
 
     // 打印结果
     // my promise reject
+{% endraw %}
+```
 
 #### 小结
 
@@ -334,32 +362,36 @@ tags:
 
 #### Promise A+规范场景
 
-      // Promise A+
-      // 创建三个promise
-      const promise1 = Promise.resolve(1)
-      const promise2 = Promise.resolve(2)
-      const promise3 = Promise.resolve(3)
+```javascript
+{% raw %}
+    // Promise A+
+    // 创建三个promise
+    const promise1 = Promise.resolve(1)
+    const promise2 = Promise.resolve(2)
+    const promise3 = Promise.resolve(3)
 
-      Promise.all([promise1,promise12,promise3]).then(res => {
-        console.log(res)
-      })
+    Promise.all([promise1,promise12,promise3]).then(res => {
+      console.log(res)
+    })
 
-      // 打印结果
-      // [1,2,3]
+    // 打印结果
+    // [1,2,3]
 
-      // 添加一个reject
-      const promise4 = Promise.resolve(1)
-      const promise5 = Promise.reject('reject')
-      const promise6 = Promise.resolve(3)
+    // 添加一个reject
+    const promise4 = Promise.resolve(1)
+    const promise5 = Promise.reject('reject')
+    const promise6 = Promise.resolve(3)
 
-      Promise.all([promise4, promise5,promise6]).then(res => {
-        console.log(res, 'resolve')
-      }).catch(e => {
-        console.log(e)
-      })
+    Promise.all([promise4, promise5,promise6]).then(res => {
+      console.log(res, 'resolve')
+    }).catch(e => {
+      console.log(e)
+    })
 
-      // 打印结果
-      // reject
+    // 打印结果
+    // reject
+{% endraw %}
+```
 
 > 根据 Promise A+规范，Promise.all 可以同时执行多个 Promise，并且在所有的 Promise 方法都返回完成之后才返回一个数组返回值。当有其中一个 Promise reject 的时候，则返回 reject 的结果。
 
@@ -367,82 +399,86 @@ tags:
 
 我们来实现一下：
 
-      class MyPromise {
-        // ...
-        // all是静态方法
-        static all(promises) {
-          // 已然是返回一个promise
-          return new MyPromise((resolve, reject) => {
-            // 创建一个收集返回值的数组
-            const result = []
+```javascript
+{% raw %}
+    class MyPromise {
+      // ...
+      // all是静态方法
+      static all(promises) {
+        // 已然是返回一个promise
+        return new MyPromise((resolve, reject) => {
+          // 创建一个收集返回值的数组
+          const result = []
 
-            // 执行
-            deepPromise(promises[0], 0 , result)
+          // 执行
+          deepPromise(promises[0], 0 , result)
 
-            // 返回结果
-            resolve(result)
+          // 返回结果
+          resolve(result)
 
-            // 这里我们用递归来实现
-            // @param {MyPromise} promise 每一个promise方法
-            // @param {number} index 索引
-            // @param {string[]} result 收集返回结果的数组
-            function deepPromise(promise, index, result) {
-              // 边界判断
-              // 所有执行完之后返回收集数组
-              if(index > promises.length - 1) {
-                return result
-              }
-
-              if(typeof promise.then === 'function') {
-                // 如果是promise
-                promise.then(res => {
-                  index++
-                  result.push(res)
-                  deepPromise(promises[index], index, result)
-                }).catch(e => {
-                  // reject直接返回
-                  reject(e instanceof Error ? e.message : e)
-                })
-              }else {
-                // 如果是普通值
-                // 这里我们只做简单判断，非promise则直接当返回值处理
-                index++
-                result.push(promise)
-                deepPromise(promises[index], index, res)
-              }
+          // 这里我们用递归来实现
+          // @param {MyPromise} promise 每一个promise方法
+          // @param {number} index 索引
+          // @param {string[]} result 收集返回结果的数组
+          function deepPromise(promise, index, result) {
+            // 边界判断
+            // 所有执行完之后返回收集数组
+            if(index > promises.length - 1) {
+              return result
             }
-          })
 
-        }
-        // ...
+            if(typeof promise.then === 'function') {
+              // 如果是promise
+              promise.then(res => {
+                index++
+                result.push(res)
+                deepPromise(promises[index], index, result)
+              }).catch(e => {
+                // reject直接返回
+                reject(e instanceof Error ? e.message : e)
+              })
+            }else {
+              // 如果是普通值
+              // 这里我们只做简单判断，非promise则直接当返回值处理
+              index++
+              result.push(promise)
+              deepPromise(promises[index], index, res)
+            }
+          }
+        })
+
       }
+      // ...
+    }
 
-      // 测试
-      // 创建三个MyPromise
-      const promise1 = MyPromise.resolve(1)
-      const promise2 = MyPromise.resolve(2)
-      const promise3 = MyPromise.resolve(3)
+    // 测试
+    // 创建三个MyPromise
+    const promise1 = MyPromise.resolve(1)
+    const promise2 = MyPromise.resolve(2)
+    const promise3 = MyPromise.resolve(3)
 
-      MyPromise.all([promise1,promise12,promise3]).then(res => {
-        console.log(res)
-      })
+    MyPromise.all([promise1,promise12,promise3]).then(res => {
+      console.log(res)
+    })
 
-      // 打印结果
-      // [1,2,3]
+    // 打印结果
+    // [1,2,3]
 
-      // 添加一个reject
-      const promise4 = MyPromise.resolve(1)
-      const promise5 = MyPromise.reject('reject')
-      const promise6 = MyPromise.resolve(3)
+    // 添加一个reject
+    const promise4 = MyPromise.resolve(1)
+    const promise5 = MyPromise.reject('reject')
+    const promise6 = MyPromise.resolve(3)
 
-      MyPromise.all([promise4, promise5,promise6]).then(res => {
-        console.log(res, 'resolve')
-      }).catch(e => {
-        console.log(e)
-      })
+    MyPromise.all([promise4, promise5,promise6]).then(res => {
+      console.log(res, 'resolve')
+    }).catch(e => {
+      console.log(e)
+    })
 
-      // 打印结果
-      // reject
+    // 打印结果
+    // reject
+{% endraw %}
+```
 
 #### 小结
 
@@ -454,45 +490,53 @@ tags:
 
 #### 实现 MyPromise.resolve
 
-      class MyPromise {
-        // ...
-        static resolve(value) {
-          return new MyPromise((resolveFn, rejectFn) => {
-            resolveFn(value)
-          })
-        }
-        // ...
+```javascript
+{% raw %}
+    class MyPromise {
+      // ...
+      static resolve(value) {
+        return new MyPromise((resolveFn, rejectFn) => {
+          resolveFn(value)
+        })
       }
+      // ...
+    }
 
-      // 测试
-      MyPromise.resolve('static resolve').then(res => {
-        console.log(res)
-      })
+    // 测试
+    MyPromise.resolve('static resolve').then(res => {
+      console.log(res)
+    })
 
-      // 打印结果
-      // static resolve
+    // 打印结果
+    // static resolve
+{% endraw %}
+```
 
 ### MyPromise.reject
 
 静态方法**reject**的实现跟**resolve**是类似，返回一个**promise**，传入对应参数即可。
 
-      class MyPromise {
-        // ...
-        static reject(reason) {
-          return new MyPromise((resolveFn, rejectFn) => {
-            rejectFn(reason)
-          })
-        }
-        // ...
+```javascript
+{% raw %}
+    class MyPromise {
+      // ...
+      static reject(reason) {
+        return new MyPromise((resolveFn, rejectFn) => {
+          rejectFn(reason)
+        })
       }
+      // ...
+    }
 
-      // 测试
-      MyPromise.reject('static reject').catch(e => {
-        console.log(res)
-      })
+    // 测试
+    MyPromise.reject('static reject').catch(e => {
+      console.log(res)
+    })
 
-      // 打印结果
-      // static reject
+    // 打印结果
+    // static reject
+{% endraw %}
+```
 
 ### 什么是 allSettled？
 
@@ -500,44 +544,48 @@ ECMA 官网最新更新了**Promise**的新的静态方法**Promise.allSettled**
 
 #### Promise A+测试场景
 
-       // Promise A+
-      // 创建三个promise
-      const promise1 = Promise.resolve(1)
-      const promise2 = Promise.resolve(2)
-      const promise3 = Promise.resolve(3)
+```javascript
+{% raw %}
+    // Promise A+
+    // 创建三个promise
+    const promise1 = Promise.resolve(1)
+    const promise2 = Promise.resolve(2)
+    const promise3 = Promise.resolve(3)
 
-      Promise.allSettled([promise1,promise12,promise3]).then(res => {
-        console.log(res)
-      })
+    Promise.allSettled([promise1,promise12,promise3]).then(res => {
+      console.log(res)
+    })
 
-      // 打印结果
+    // 打印结果
+    /*
+    [
+      {status: 'fulfilished', value: 1},
+      {status: 'fulfilished', value: 2},
+      {status: 'fulfilished', value: 3}
+    ]
+    */
+
+    // 添加一个reject
+    const promise4 = Promise.resolve(1)
+    const promise5 = Promise.reject('reject')
+    const promise6 = Promise.resolve(3)
+
+    Promise.allSettled([promise4, promise5,promise6]).then(res => {
+      console.log(res, 'resolve')
+    }).catch(e => {
+      console.log(e)
+    })
+
+    // 打印结果
       /*
-      [
-        {status: 'fulfilished', value: 1},
-        {status: 'fulfilished', value: 2},
-        {status: 'fulfilished', value: 3}
-      ]
-      */
-
-      // 添加一个reject
-      const promise4 = Promise.resolve(1)
-      const promise5 = Promise.reject('reject')
-      const promise6 = Promise.resolve(3)
-
-      Promise.allSettled([promise4, promise5,promise6]).then(res => {
-        console.log(res, 'resolve')
-      }).catch(e => {
-        console.log(e)
-      })
-
-      // 打印结果
-       /*
-      [
-        {status: 'fulfilished', value: 1},
-        {status: 'rejected', value: 'reject'},
-        {status: 'fulfilished', value: 3}
-      ]
-      */
+    [
+      {status: 'fulfilished', value: 1},
+      {status: 'rejected', value: 'reject'},
+      {status: 'fulfilished', value: 3}
+    ]
+    */
+{% endraw %}
+```
 
 可以看出来**allSettled**和 all 最大的区别就是，**allSettled**不管是**resolve**，还是**reject**都能完整返回结果数组，只不过每个数组项都是以对象的形式输出，**status**描述状态，**value**接收返回值。
 
@@ -545,8 +593,10 @@ ECMA 官网最新更新了**Promise**的新的静态方法**Promise.allSettled**
 
 **allSettled**的整体逻辑跟**all**是一样的，只不过返回值的处理稍微有所不同
 
-      class MyPromise {
-    // ...
+```javascript
+{% raw %}
+    class MyPromise {
+      // ...
       static allSettled(promises) {
           // 已然是返回一个promise
           return new MyPromise((resolve, reject) => {
@@ -591,52 +641,55 @@ ECMA 官网最新更新了**Promise**的新的静态方法**Promise.allSettled**
               }
             }
           })
-
         }
-      // ...
-      }
+    // ...
+    }
 
-      // 测试
-      // 创建三个promise
-      const promise1 = MyPromise.resolve(1)
-      const promise2 = MyPromise.resolve(2)
-      const promise3 = MyPromise.resolve(3)
+    // 测试
+    // 创建三个promise
+    const promise1 = MyPromise.resolve(1)
+    const promise2 = MyPromise.resolve(2)
+    const promise3 = MyPromise.resolve(3)
 
-      MyPromise.allSettled([promise1,promise12,promise3]).then(res => {
-        console.log(res)
-      })
+    MyPromise.allSettled([promise1,promise12,promise3]).then(res => {
+      console.log(res)
+    })
 
-      // 打印结果
+    // 打印结果
+    /*
+    [
+      {status: 'fulfilished', value: 1},
+      {status: 'fulfilished', value: 2},
+      {status: 'fulfilished', value: 3}
+    ]
+    */
+
+    // 添加一个reject
+    const promise4 = MyPromise.resolve(1)
+    const promise5 = MyPromise.reject('reject')
+    const promise6 = MyPromise.resolve(3)
+
+    Promise.allSettled([promise4, promise5,promise6]).then(res => {
+      console.log(res, 'resolve')
+    }).catch(e => {
+      console.log(e)
+    })
+
+    // 打印结果
       /*
-      [
-        {status: 'fulfilished', value: 1},
-        {status: 'fulfilished', value: 2},
-        {status: 'fulfilished', value: 3}
-      ]
-      */
-
-      // 添加一个reject
-      const promise4 = MyPromise.resolve(1)
-      const promise5 = MyPromise.reject('reject')
-      const promise6 = MyPromise.resolve(3)
-
-      Promise.allSettled([promise4, promise5,promise6]).then(res => {
-        console.log(res, 'resolve')
-      }).catch(e => {
-        console.log(e)
-      })
-
-      // 打印结果
-       /*
-      [
-        {status: 'fulfilished', value: 1},
-        {status: 'rejected', value: 'reject'},
-        {status: 'fulfilished', value: 3}
-      ]
-      */
+    [
+      {status: 'fulfilished', value: 1},
+      {status: 'rejected', value: 'reject'},
+      {status: 'fulfilished', value: 3}
+    ]
+    */
+{% endraw %}
+```
 
 ## 完整代码
 
+```javascript
+{% raw %}
     class MyPromise {
       constructor(executor) {
         // 初始化状态status
@@ -861,6 +914,8 @@ ECMA 官网最新更新了**Promise**的新的静态方法**Promise.allSettled**
 
         }
     }
+{% endraw %}
+```
 
 ## 总结
 
