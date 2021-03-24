@@ -42,7 +42,7 @@ var delMult = function(s, k) {
             return arr.join('');
         }
         // 这里还是拿 s = 'abcd'，k = 2 来举例，只需判断 4 - 2 + 1 = 3 次
-        // 从 s[i] = 'a' 与 s[i + k] = 'b' 对比 
+        // 从 s[i] = 'a' 与 s[i + j] = 'b' 对比 
         for (let i = 0; i < arr.length - k + 1; i++) {
             let flag = true;
             for (let j = 1; j < k; j++) {
