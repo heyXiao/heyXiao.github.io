@@ -431,14 +431,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-05-13
+                    2021-05-14
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    149
+                    216
                 </div>
                 
 
@@ -457,6 +457,16 @@
 
 <h3 id="今天是2021-05-13"><a href="#今天是2021-05-13" class="headerlink" title="今天是2021-05-13"></a>今天是2021-05-13</h3><p style="text-indent:2em">axios 环境一遍就配置好了，基本功还是没落下哈哈哈哈。</p>
 
+<h3 id="今天是2021-05-14"><a href="#今天是2021-05-14" class="headerlink" title="今天是2021-05-14"></a>今天是2021-05-14</h3><p style="text-indent:2em">axios + element 上传图片还是折腾了一下...上传的是 file 实例化对象中的 raw，展示的图片路径以下：</p>
+
+<pre class=" language-javascript"><code class="language-javascript">
+  <span class="token keyword">var</span> reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileReader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  reader<span class="token punctuation">.</span><span class="token function">readAsDataURL</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span>raw<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  reader<span class="token punctuation">.</span>onload <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    _this<span class="token punctuation">.</span>imgUrl <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>_this<span class="token punctuation">.</span>imgUrl<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//图片的base64数据</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
 <p style="text-indent:2em"></p>
 <p style="text-indent:2em"></p>
 <p style="text-indent:2em"></p>
