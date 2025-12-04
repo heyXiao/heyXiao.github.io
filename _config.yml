@@ -110,7 +110,8 @@ theme: hexo-theme-matery-master
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/heyXiao/heyXiao.github.io.git
+  # repo: https://github.com/heyXiao/heyXiao.github.io.git
+  repo: git@github.com:heyXiao/heyXiao.github.io.git
   branch: master
 lazyload:
   enable: true 
